@@ -1,0 +1,12 @@
+streamlit
+pandas
+numpy
+plotly
+networkx
+gseapy
+anndata
+scanpy
+scipy
+matplotlib
+requests
+openpyxl
