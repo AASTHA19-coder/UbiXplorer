@@ -415,7 +415,10 @@ def spatial_map(ax, adata, vals, ttl):
 # ======================================================
 # HOTSPOT MAP
 # ======================================================
-def hotspot_map(ax, adata, vals, ttl):
+# ======================================================
+# HOTSPOT MAP
+# ======================================================
+def hotspot_map(ax, adata, vals, ttl, species="human"):
 
     x, y = get_xy(adata)
 
@@ -427,6 +430,10 @@ def hotspot_map(ax, adata, vals, ttl):
 
     hot = z > 2
 
+    # ==================================================
+    # BACKGROUND
+    # ==================================================
+
     ax.scatter(
         x,
         y,
@@ -434,6 +441,10 @@ def hotspot_map(ax, adata, vals, ttl):
         s=18,
         edgecolors="none"
     )
+
+    # ==================================================
+    # HOTSPOTS
+    # ==================================================
 
     ax.scatter(
         x[hot],
@@ -443,6 +454,10 @@ def hotspot_map(ax, adata, vals, ttl):
         edgecolors="white",
         linewidth=0.2
     )
+
+    # ==================================================
+    # TITLES
+    # ==================================================
 
     ax.set_title(
         ttl,
@@ -467,11 +482,48 @@ def hotspot_map(ax, adata, vals, ttl):
 
     clean_axis(ax, x, y)
 
-    return (
-        int(hot.sum()),
-        round(float(z.max()), 2)
+    # ==================================================
+    # REGION INTERPRETATION
+    # ==================================================
+
+    hot_x = x[hot]
+    hot_y = y[hot]
+
+    region_labels = []
+
+    for xi, yi in zip(hot_x, hot_y):
+
+        region = assign_brain_region(
+            xi,
+            yi,
+            species=species
+        )
+
+        region_labels.append(region)
+
+    region_df = pd.DataFrame({
+
+        "Region": region_labels
+    })
+
+    region_counts = (
+
+        region_df["Region"]
+        .value_counts()
+        .reset_index()
     )
 
+    region_counts.columns = [
+
+        "Brain Region",
+        "Hotspot Count"
+    ]
+
+    return (
+        int(hot.sum()),
+        round(float(z.max()), 2),
+        region_counts
+    )
 # ======================================================
 # TABS
 # ======================================================
@@ -556,13 +608,14 @@ with tab2:
             facecolor="#06111f"
         )
 
-        human_hot, hz = hotspot_map(
+        human_hot, hz, human_regions = hotspot_map(
             ax,
             adata_h,
             vals_h,
             "Human Disease Hotspots"
             if source == "Uploaded Genes"
-            else f"Human Hotspots - {gene}"
+            else f"Human Hotspots - {gene}", 
+            species="human"
         )
 
         st.pyplot(fig)
@@ -580,13 +633,14 @@ with tab2:
             facecolor="#06111f"
         )
 
-        mouse_hot, mz = hotspot_map(
+        mouse_hot, mz, mouse_regions = hotspot_map(
             ax,
             adata_m,
             vals_m,
             "Mouse Disease Hotspots"
             if source == "Uploaded Genes"
-            else f"Mouse Hotspots - {mouse_gene}"
+            else f"Mouse Hotspots - {mouse_gene}", 
+            species="mouse"
         )
 
         st.pyplot(fig)
@@ -607,6 +661,28 @@ Human Max Z-score: {hz}
 
 Mouse Max Z-score: {mz}
 """)
+
+# ======================================================
+# REGIONAL INTERPRETATION
+# ======================================================
+
+st.markdown(
+    "### Human Regional Hotspots"
+)
+
+st.dataframe(
+    human_regions,
+    use_container_width=True
+)
+
+st.markdown(
+    "### Mouse Regional Hotspots"
+)
+
+st.dataframe(
+    mouse_regions,
+    use_container_width=True
+)
 
 # ======================================================
 # TAB 3
@@ -658,61 +734,6 @@ with tab3:
         )
 
 
-#################################################
-# =========================================================
-# REGION INTERPRETATION
-# =========================================================
-
-region_labels = []
-
-for xi, yi in zip(hot_x, hot_y):
-
-    region = assign_brain_region(
-
-        xi,
-        yi,
-
-        species=species
-    )
-
-    region_labels.append(region)
-
-# ---------------------------------------------------------
-# REGION SUMMARY
-# ---------------------------------------------------------
-
-region_df = pd.DataFrame({
-
-    "Region": region_labels
-})
-
-region_counts = (
-
-    region_df["Region"]
-    .value_counts()
-    .reset_index()
-)
-
-region_counts.columns = [
-
-    "Brain Region",
-    "Hotspot Count"
-]
-
-# ---------------------------------------------------------
-# DISPLAY
-# ---------------------------------------------------------
-
-st.markdown(
-    "### Regional Hotspot Enrichment"
-)
-
-st.dataframe(
-
-    region_counts,
-
-    use_container_width=True
-)
 # ======================================================
 # FOOTER
 # ======================================================
