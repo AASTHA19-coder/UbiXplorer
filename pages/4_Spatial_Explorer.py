@@ -156,19 +156,7 @@ def get_xy(adata):
     x = coords[:, 0].astype(float)
     y = coords[:, 1].astype(float)
 
-    st.write(
-        "X RANGE:",
-        float(x.min()),
-        "→",
-        float(x.max())
-    )
-
-    st.write(
-        "Y RANGE:",
-        float(y.min()),
-        "→",
-        float(y.max())
-    )
+    
 
     return x, y
 ###############################################################
