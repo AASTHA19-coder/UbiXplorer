@@ -146,14 +146,29 @@ mouse_gene = mouse_map.get(
 # ======================================================
 # GET XY COORDINATES
 # ======================================================
+# ======================================================
+# GET XY COORDINATES
+# ======================================================
 def get_xy(adata):
 
     coords = adata.obsm["spatial"]
 
     x = coords[:, 0].astype(float)
     y = coords[:, 1].astype(float)
-   st.write("X RANGE:", x.min(), "→", x.max())
-   st.write("Y RANGE:", y.min(), "→", y.max())
+
+    st.write(
+        "X RANGE:",
+        float(x.min()),
+        "→",
+        float(x.max())
+    )
+
+    st.write(
+        "Y RANGE:",
+        float(y.min()),
+        "→",
+        float(y.max())
+    )
 
     return x, y
 ###############################################################
