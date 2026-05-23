@@ -262,7 +262,7 @@ with m4:
 # ======================================================
 st.markdown("<div class='section'>Next Step</div>", unsafe_allow_html=True)
 
-st.info(" Open "Upload Data" from the side pane to continue further.")
+st.info("Open 'Upload Data' from the side pane to continue further.")
 
 # ======================================================
 # FOOTER
