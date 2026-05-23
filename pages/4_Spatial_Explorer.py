@@ -442,20 +442,28 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
     # ==================================================
     # TISSUE BACKGROUND IMAGE
     # ==================================================
+        if species == "human":
 
-    if species == "human":
+        tissue_path = (
 
-        tissue_img = plt.imread(
-            "assets/human/spatial/tissue_hires_image.png"
+            BASE_DIR /
+            "assets" /
+            "human" /
+            "reference" /
+            "tissue_hires_image.png"
         )
 
     else:
 
-        tissue_img = plt.imread(
-            "assets/mouse/spatial/tissue_hires_image.png"
-        )
+        tissue_path = (
 
-    ax.imshow(
+            BASE_DIR /
+            "assets" /
+            "mouse" /
+            "reference" /
+            "tissue_hires_image.png"
+        )
+        ax.imshow(
 
         tissue_img,
 
