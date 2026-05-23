@@ -986,7 +986,206 @@ with tab3:
         st.success(
             "Comparable projected burden across species."
         )
+    # ==================================================
+    # HUMAN REGIONAL TABLE
+    # ==================================================
 
+    st.markdown(
+        "### Human Regional Hotspots"
+    )
+
+    st.dataframe(
+        human_regions,
+        use_container_width=True
+    )
+
+    # ==================================================
+    # MOUSE REGIONAL TABLE
+    # ==================================================
+
+    st.markdown(
+        "### Mouse Regional Hotspots"
+    )
+
+    st.dataframe(
+        mouse_regions,
+        use_container_width=True
+    )
+
+    # ==================================================
+    # REGIONAL HOTSPOT BARPLOTS
+    # ==================================================
+
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+    human_plot = human_regions.sort_values(
+
+        by="Hotspot Count",
+        ascending=True
+    )
+
+    mouse_plot = mouse_regions.sort_values(
+
+        by="Hotspot Count",
+        ascending=True
+    )
+
+    fig, axes = plt.subplots(
+
+        1,
+        2,
+
+        figsize=(14, 5),
+
+        facecolor="black"
+    )
+
+    # ----------------------------------------------
+    # HUMAN
+    # ----------------------------------------------
+
+    sns.barplot(
+
+        data=human_plot,
+
+        x="Hotspot Count",
+        y="Brain Region",
+
+        palette=sns.color_palette(
+
+            "rocket",
+            len(human_plot)
+        ),
+
+        ax=axes[0]
+    )
+
+    axes[0].set_title(
+
+        "Human Regional Hotspots",
+
+        color="white",
+
+        fontsize=16,
+
+        weight="bold"
+    )
+
+    axes[0].set_facecolor("black")
+
+    axes[0].tick_params(
+
+        colors="white",
+        labelsize=10
+    )
+
+    axes[0].set_xlabel(
+
+        "Hotspot Count",
+
+        color="white"
+    )
+
+    axes[0].set_ylabel("")
+
+    for spine in axes[0].spines.values():
+
+        spine.set_visible(False)
+
+    for i, v in enumerate(
+
+        human_plot["Hotspot Count"]
+    ):
+
+        axes[0].text(
+
+            v + 1,
+            i,
+
+            str(v),
+
+            color="white",
+
+            va="center",
+
+            fontsize=9
+        )
+
+    # ----------------------------------------------
+    # MOUSE
+    # ----------------------------------------------
+
+    sns.barplot(
+
+        data=mouse_plot,
+
+        x="Hotspot Count",
+        y="Brain Region",
+
+        palette=sns.color_palette(
+
+            "mako",
+            len(mouse_plot)
+        ),
+
+        ax=axes[1]
+    )
+
+    axes[1].set_title(
+
+        "Mouse Regional Hotspots",
+
+        color="white",
+
+        fontsize=16,
+
+        weight="bold"
+    )
+
+    axes[1].set_facecolor("black")
+
+    axes[1].tick_params(
+
+        colors="white",
+        labelsize=10
+    )
+
+    axes[1].set_xlabel(
+
+        "Hotspot Count",
+
+        color="white"
+    )
+
+    axes[1].set_ylabel("")
+
+    for spine in axes[1].spines.values():
+
+        spine.set_visible(False)
+
+    for i, v in enumerate(
+
+        mouse_plot["Hotspot Count"]
+    ):
+
+        axes[1].text(
+
+            v + 1,
+            i,
+
+            str(v),
+
+            color="white",
+
+            va="center",
+
+            fontsize=9
+        )
+
+    plt.tight_layout()
+
+    st.pyplot(fig)
 
 # ======================================================
 # FOOTER
