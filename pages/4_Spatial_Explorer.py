@@ -439,6 +439,35 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
     )
 
     hot = z > 2
+    # ==================================================
+    # TISSUE BACKGROUND IMAGE
+    # ==================================================
+
+    if species == "human":
+
+        tissue_img = plt.imread(
+            "assets/human/spatial/tissue_hires_image.png"
+        )
+
+    else:
+
+        tissue_img = plt.imread(
+            "assets/mouse/spatial/tissue_hires_image.png"
+        )
+
+    ax.imshow(
+
+        tissue_img,
+
+        extent=[
+            x.min(),
+            x.max(),
+            y.max(),
+            y.min()
+        ],
+
+        alpha=0.38
+    )
 
     # ==================================================
     # SUBTLE BACKGROUND TISSUE
@@ -473,9 +502,9 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         cmap="coolwarm",
 
-        alpha=0.68,
+        alpha=0.42,
 
-        levels=120,
+        levels=40,
 
         thresh=0.08,
 
