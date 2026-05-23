@@ -492,17 +492,17 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         ax.imshow(
 
-            tissue_img,
+    tissue_img,
 
-            extent=[
-                x.min(),
-                x.max(),
-                y.max(),
-                y.min()
-            ],
+    extent=[
+        x.min(),
+        x.max(),
+        y.max(),
+        y.min()
+    ],
 
-            alpha=0.38
-        )
+    alpha=0.38
+)
 
         # ==================================================
     # SUBTLE BACKGROUND TISSUE
