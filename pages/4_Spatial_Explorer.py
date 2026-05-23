@@ -453,16 +453,19 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
     region_colors = {
 
-        "Prefrontal Cortex": "#7c3aed",
-        "Temporal Cortex": "#2563eb",
-        "Hippocampus": "#059669",
-        "Cingulate Cortex": "#d97706",
-        "White Matter": "#475569",
+    # HUMAN
+    "Prefrontal Cortex": "#6d5efc",
+    "Temporal Cortex": "#3b82f6",
+    "Hippocampus": "#14b8a6",
+    "Cingulate Cortex": "#f59e0b",
+    "White Matter": "#64748b",
 
-        "Striatum": "#9333ea",
-        "Cortex": "#2563eb",
-        "Thalamus": "#dc2626"
-    }
+    # MOUSE
+    "Striatum": "#8b5cf6",
+    "Cortex": "#2563eb",
+    "Thalamus": "#ef4444"
+}
+
 
     bg_colors = []
 
