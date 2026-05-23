@@ -175,13 +175,11 @@ def get_xy(adata):
 # =========================================================
 # APPROXIMATE BRAIN REGION ANNOTATION
 # =========================================================
+# =========================================================
+# APPROXIMATE BRAIN REGION ANNOTATION
+# =========================================================
 
 def assign_brain_region(x, y, species="human"):
-
-    """
-    Approximate spatial brain region assignment
-    based on Visium coordinate space.
-    """
 
     # =====================================================
     # HUMAN
@@ -189,19 +187,24 @@ def assign_brain_region(x, y, species="human"):
 
     if species == "human":
 
-        if x < 250 and y < 250:
+        # LEFT CORTEX
+        if x < 9000 and y < 9000:
             return "Prefrontal Cortex"
 
-        elif x < 250 and y >= 250:
+        # LOWER LEFT
+        elif x < 9000 and y >= 9000:
             return "Temporal Cortex"
 
-        elif 250 <= x < 500 and y < 300:
+        # CENTRAL UPPER
+        elif 9000 <= x < 15000 and y < 11000:
             return "Hippocampus"
 
-        elif 250 <= x < 500 and y >= 300:
+        # CENTRAL LOWER
+        elif 9000 <= x < 15000 and y >= 11000:
             return "Cingulate Cortex"
 
-        elif x >= 500:
+        # RIGHT SIDE
+        elif x >= 15000:
             return "White Matter"
 
         else:
@@ -213,24 +216,28 @@ def assign_brain_region(x, y, species="human"):
 
     else:
 
-        if x < 250 and y < 250:
+        # LEFT UPPER
+        if x < 3500 and y < 4500:
             return "Striatum"
 
-        elif x < 250 and y >= 250:
+        # LEFT LOWER
+        elif x < 3500 and y >= 4500:
             return "Cortex"
 
-        elif 250 <= x < 500 and y < 300:
+        # CENTRAL
+        elif 3500 <= x < 6000 and y < 6000:
             return "Hippocampus"
 
-        elif 250 <= x < 500 and y >= 300:
+        # CENTRAL LOWER
+        elif 3500 <= x < 6000 and y >= 6000:
             return "Thalamus"
 
-        elif x >= 500:
+        # RIGHT
+        elif x >= 6000:
             return "White Matter"
 
         else:
             return "Unknown"
-
 # ======================================================
 def get_vals(adata, selected_gene):
 
