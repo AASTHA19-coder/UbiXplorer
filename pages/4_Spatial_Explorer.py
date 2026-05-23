@@ -440,11 +440,24 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
     hot = z > 2
 
-    
+    # ==================================================
+    # SUBTLE BACKGROUND TISSUE
+    # ==================================================
 
-    # ==================================================
-    # HOTSPOTS
-    # ==================================================
+    ax.scatter(
+
+        x,
+        y,
+
+        c="#94a3b8",
+
+        s=10,
+
+        alpha=0.16,
+
+        edgecolors="none"
+    )
+
     # ==================================================
     # HOTSPOT DENSITY MAP
     # ==================================================
@@ -460,20 +473,20 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         cmap="coolwarm",
 
-        alpha=0.65,
+        alpha=0.68,
 
-        levels=100,
+        levels=120,
 
-        thresh=0.05,
+        thresh=0.08,
 
-        bw_adjust=0.7,
+        bw_adjust=0.85,
 
         ax=ax
     )
 
-    # --------------------------------------------------
-    # HOTSPOT CORE POINTS
-    # --------------------------------------------------
+    # ==================================================
+    # HOTSPOT CORE DOTS
+    # ==================================================
 
     ax.scatter(
 
@@ -482,12 +495,17 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         c="#ff6b6b",
 
-        s=10,
+        s=16,
 
-        alpha=0.55,
+        alpha=0.95,
 
-        edgecolors="none"
+        edgecolors="white",
+
+        linewidth=0.25,
+
+        zorder=5
     )
+
     # ==================================================
     # TITLES
     # ==================================================
@@ -513,115 +531,52 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
         color="white"
     )
 
+    # ==================================================
+    # CLEAN AXIS
+    # ==================================================
+
     clean_axis(ax, x, y)
-        # ==================================================
-    # SUBTLE ANATOMICAL OVERLAYS
+
     # ==================================================
-
-    overlays = []
-
-    if species == "human":
-
-        overlays = [
-
-            ("Prefrontal Cortex", 7000, 5000, "#8b5cf6"),
-            ("Temporal Cortex", 7000, 15000, "#2563eb"),
-            ("Hippocampus", 11500, 8000, "#14b8a6"),
-            ("Cingulate Cortex", 11500, 15000, "#f59e0b"),
-            ("White Matter", 18000, 11000, "#94a3b8")
-        ]
-
-    else:
-
-        overlays = [
-
-            ("Striatum", 2600, 3000, "#8b5cf6"),
-            ("Cortex", 2600, 7600, "#2563eb"),
-            ("Hippocampus", 4700, 4300, "#14b8a6"),
-            ("Thalamus", 4700, 7600, "#ef4444"),
-            ("White Matter", 7200, 5000, "#94a3b8")
-        ]
-
-    # --------------------------------------------------
-    # DRAW SOFT OVERLAYS
-    # --------------------------------------------------
-
-    for region, lx, ly, clr in overlays:
-
-        ax.scatter(
-
-            [lx],
-            [ly],
-
-            s=22000,
-
-            c=clr,
-
-            alpha=0.06,
-
-            edgecolors="none"
-        )
-
-        ax.text(
-
-            lx,
-            ly,
-
-            region,
-
-            fontsize=8,
-
-            color="white",
-
-            ha="center",
-
-            alpha=0.75,
-
-            weight="bold"
-        )
-# ==================================================
-# REGION LABEL OVERLAY
-# ==================================================
-    # ==================================================
-    # REGION LABEL OVERLAY
+    # REGION LABELS
     # ==================================================
 
     if species == "human":
 
-        label_positions = {
+        labels = [
 
-            "Prefrontal Cortex": (6500, 5000),
-            "Temporal Cortex": (6500, 15000),
-            "Hippocampus": (11500, 7000),
-            "Cingulate Cortex": (11500, 15000),
-            "White Matter": (18000, 11000)
-        }
+            ("Prefrontal Cortex", 7000, 5000),
+            ("Temporal Cortex", 7000, 15000),
+            ("Hippocampus", 11500, 7000),
+            ("Cingulate Cortex", 11500, 15000),
+            ("White Matter", 18000, 11000)
+        ]
 
     else:
 
-        label_positions = {
+        labels = [
 
-            "Striatum": (2500, 3000),
-            "Cortex": (2500, 7500),
-            "Hippocampus": (4500, 4500),
-            "Thalamus": (4500, 8000),
-            "White Matter": (7200, 5000)
-        }
+            ("Striatum", 2600, 3500),
+            ("Cortex", 2600, 7600),
+            ("Hippocampus", 4700, 5000),
+            ("Thalamus", 4700, 8200),
+            ("White Matter", 7200, 5200)
+        ]
 
     # --------------------------------------------------
     # DRAW LABELS
     # --------------------------------------------------
 
-    for region, (lx, ly) in label_positions.items():
+    for txt, lx, ly in labels:
 
         ax.text(
 
             lx,
             ly,
 
-            region,
+            txt,
 
-            fontsize=9,
+            fontsize=8,
 
             color="white",
 
@@ -639,9 +594,10 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
                 edgecolor="none",
 
-                pad=2
+                pad=1.5
             )
         )
+
     # ==================================================
     # REGION INTERPRETATION
     # ==================================================
