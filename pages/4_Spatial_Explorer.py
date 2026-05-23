@@ -987,32 +987,6 @@ with tab3:
             "Comparable projected burden across species."
         )
     # ==================================================
-    # HUMAN REGIONAL TABLE
-    # ==================================================
-
-    st.markdown(
-        "### Human Regional Hotspots"
-    )
-
-    st.dataframe(
-        human_regions,
-        use_container_width=True
-    )
-
-    # ==================================================
-    # MOUSE REGIONAL TABLE
-    # ==================================================
-
-    st.markdown(
-        "### Mouse Regional Hotspots"
-    )
-
-    st.dataframe(
-        mouse_regions,
-        use_container_width=True
-    )
-
-    # ==================================================
     # REGIONAL HOTSPOT BARPLOTS
     # ==================================================
 
