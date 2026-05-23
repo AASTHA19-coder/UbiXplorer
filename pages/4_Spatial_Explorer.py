@@ -442,7 +442,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
     # ==================================================
     # TISSUE BACKGROUND IMAGE
     # ==================================================
-        if species == "human":
+    if species == "human":
 
         tissue_path = (
 
