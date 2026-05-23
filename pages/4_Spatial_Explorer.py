@@ -153,6 +153,65 @@ def get_xy(adata):
     y = coords[:, 1].astype(float)
 
     return x, y
+###############################################################
+# =========================================================
+# APPROXIMATE BRAIN REGION ANNOTATION
+# =========================================================
+
+def assign_brain_region(x, y, species="human"):
+
+    """
+    Approximate spatial brain region assignment
+    based on Visium coordinate space.
+    """
+
+    # =====================================================
+    # HUMAN
+    # =====================================================
+
+    if species == "human":
+
+        if x < 250 and y < 250:
+            return "Prefrontal Cortex"
+
+        elif x < 250 and y >= 250:
+            return "Temporal Cortex"
+
+        elif 250 <= x < 500 and y < 300:
+            return "Hippocampus"
+
+        elif 250 <= x < 500 and y >= 300:
+            return "Cingulate Cortex"
+
+        elif x >= 500:
+            return "White Matter"
+
+        else:
+            return "Unknown"
+
+    # =====================================================
+    # MOUSE
+    # =====================================================
+
+    else:
+
+        if x < 250 and y < 250:
+            return "Striatum"
+
+        elif x < 250 and y >= 250:
+            return "Cortex"
+
+        elif 250 <= x < 500 and y < 300:
+            return "Hippocampus"
+
+        elif 250 <= x < 500 and y >= 300:
+            return "Thalamus"
+
+        elif x >= 500:
+            return "White Matter"
+
+        else:
+            return "Unknown"
 
 # ======================================================
 def get_vals(adata, selected_gene):
@@ -598,6 +657,62 @@ with tab3:
             "Comparable projected burden across species."
         )
 
+
+#################################################
+# =========================================================
+# REGION INTERPRETATION
+# =========================================================
+
+region_labels = []
+
+for xi, yi in zip(hot_x, hot_y):
+
+    region = assign_brain_region(
+
+        xi,
+        yi,
+
+        species=species
+    )
+
+    region_labels.append(region)
+
+# ---------------------------------------------------------
+# REGION SUMMARY
+# ---------------------------------------------------------
+
+region_df = pd.DataFrame({
+
+    "Region": region_labels
+})
+
+region_counts = (
+
+    region_df["Region"]
+    .value_counts()
+    .reset_index()
+)
+
+region_counts.columns = [
+
+    "Brain Region",
+    "Hotspot Count"
+]
+
+# ---------------------------------------------------------
+# DISPLAY
+# ---------------------------------------------------------
+
+st.markdown(
+    "### Regional Hotspot Enrichment"
+)
+
+st.dataframe(
+
+    region_counts,
+
+    use_container_width=True
+)
 # ======================================================
 # FOOTER
 # ======================================================
