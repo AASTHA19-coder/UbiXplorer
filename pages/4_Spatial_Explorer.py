@@ -428,7 +428,17 @@ def spatial_map(ax, adata, vals, ttl):
 # ======================================================
 # HOTSPOT MAP
 # ======================================================
+# ======================================================
+# HOTSPOT MAP
+# ======================================================
 def hotspot_map(ax, adata, vals, ttl, species="human"):
+
+    import seaborn as sns
+    from pathlib import Path
+
+    # ==================================================
+    # COORDINATES
+    # ==================================================
 
     x, y = get_xy(adata)
 
@@ -439,18 +449,12 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
     )
 
     hot = z > 2
-    from pathlib import Path
-    BASE_DIR = Path(__file__).resolve().parent.parent
-    # ==================================================
-    # TISSUE BACKGROUND IMAGE
-    # ==================================================
-        # ==================================================
-    # OPTIONAL TISSUE BACKGROUND
-    # ==================================================
-
-    from pathlib import Path
 
     BASE_DIR = Path(__file__).resolve().parent.parent
+
+    # ==================================================
+    # LOAD TISSUE IMAGE
+    # ==================================================
 
     tissue_img = None
 
@@ -484,30 +488,36 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         st.warning(f"Tissue image not loaded: {e}")
 
-    # --------------------------------------------------
-    # DRAW IMAGE IF AVAILABLE
-    # --------------------------------------------------
+    # ==================================================
+    # BLACK BACKGROUND
+    # ==================================================
+
+    ax.set_facecolor("black")
+
+    # ==================================================
+    # DRAW TISSUE IMAGE
+    # ==================================================
 
     if tissue_img is not None:
 
         ax.imshow(
 
-    tissue_img,
+            tissue_img,
 
-    extent=[
-        x.min(),
-        x.max(),
-        y.max(),
-        y.min()
-    ],
+            extent=[
+                x.min(),
+                x.max(),
+                y.max(),
+                y.min()
+            ],
 
-    alpha=0.38,
+            alpha=0.14,
 
-    aspect="auto"
-)
+            aspect="auto"
+        )
 
-        # ==================================================
-    # SUBTLE BACKGROUND TISSUE
+    # ==================================================
+    # SUBTLE TISSUE SPOTS
     # ==================================================
 
     ax.scatter(
@@ -517,18 +527,16 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         c="#94a3b8",
 
-        s=10,
+        s=8,
 
-        alpha=0.16,
+        alpha=0.12,
 
         edgecolors="none"
     )
 
     # ==================================================
-    # HOTSPOT DENSITY MAP
+    # KDE HOTSPOT MAP
     # ==================================================
-
-    import seaborn as sns
 
     sns.kdeplot(
 
@@ -537,21 +545,23 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         fill=True,
 
-        cmap="coolwarm",
+        cmap="magma",
 
-        alpha=0.42,
+        alpha=0.78,
 
-        levels=40,
+        levels=200,
 
-        thresh=0.08,
+        thresh=0.03,
 
-        bw_adjust=0.85,
+        bw_adjust=1.1,
+
+        linewidths=0,
 
         ax=ax
     )
 
     # ==================================================
-    # HOTSPOT CORE DOTS
+    # HOTSPOT CORE POINTS
     # ==================================================
 
     ax.scatter(
@@ -559,49 +569,46 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
         x[hot],
         y[hot],
 
-        c="#ff6b6b",
+        c="#ffb4a2",
 
-        s=16,
+        s=6,
 
-        alpha=0.95,
+        alpha=0.75,
 
-        edgecolors="white",
-
-        linewidth=0.25,
+        edgecolors="none",
 
         zorder=5
     )
 
     # ==================================================
-    # TITLES
+    # TITLE
     # ==================================================
 
     ax.set_title(
+
         ttl,
+
         color="white",
-        fontsize=18,
+
+        fontsize=20,
+
         weight="bold"
     )
 
-    ax.set_facecolor("#06111f")
+    # ==================================================
+    # REMOVE AXES
+    # ==================================================
+
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+    for spine in ax.spines.values():
+
+        spine.set_visible(False)
 
     ax.invert_yaxis()
 
-    ax.set_xlabel(
-        "Spatial X",
-        color="white"
-    )
-
-    ax.set_ylabel(
-        "Spatial Y",
-        color="white"
-    )
-
-    # ==================================================
-    # CLEAN AXIS
-    # ==================================================
-
-    clean_axis(ax, x, y)
+    ax.set_aspect("auto")
 
     # ==================================================
     # REGION LABELS
@@ -629,9 +636,9 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
             ("White Matter", 7200, 5200)
         ]
 
-    # --------------------------------------------------
+    # ==================================================
     # DRAW LABELS
-    # --------------------------------------------------
+    # ==================================================
 
     for txt, lx, ly in labels:
 
@@ -642,26 +649,15 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
             txt,
 
-            fontsize=8,
+            fontsize=9,
 
-            color="white",
+            color="#e2e8f0",
 
             weight="bold",
 
             ha="center",
 
-            alpha=0.9,
-
-            bbox=dict(
-
-                facecolor="black",
-
-                alpha=0.35,
-
-                edgecolor="none",
-
-                pad=1.5
-            )
+            alpha=0.55
         )
 
     # ==================================================
@@ -676,8 +672,10 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
     for xi, yi in zip(hot_x, hot_y):
 
         region = assign_brain_region(
+
             xi,
             yi,
+
             species=species
         )
 
@@ -702,8 +700,11 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
     ]
 
     return (
+
         int(hot.sum()),
+
         round(float(z.max()), 2),
+
         region_counts
     )
 # ======================================================
