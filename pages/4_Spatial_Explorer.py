@@ -447,11 +447,56 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
     # BACKGROUND
     # ==================================================
 
+       # ==================================================
+    # REGION-BASED BACKGROUND COLORING
+    # ==================================================
+
+    region_colors = {
+
+        "Prefrontal Cortex": "#7c3aed",
+        "Temporal Cortex": "#2563eb",
+        "Hippocampus": "#059669",
+        "Cingulate Cortex": "#d97706",
+        "White Matter": "#475569",
+
+        "Striatum": "#9333ea",
+        "Cortex": "#2563eb",
+        "Thalamus": "#dc2626"
+    }
+
+    bg_colors = []
+
+    for xi, yi in zip(x, y):
+
+        region = assign_brain_region(
+            xi,
+            yi,
+            species=species
+        )
+
+        bg_colors.append(
+
+            region_colors.get(
+                region,
+                "#334155"
+            )
+        )
+
+    # --------------------------------------------------
+    # DRAW BACKGROUND
+    # --------------------------------------------------
+
     ax.scatter(
+
         x,
         y,
-        c="#334155",
+
+        c=bg_colors,
+
         s=18,
+
+        alpha=0.35,
+
         edgecolors="none"
     )
 
