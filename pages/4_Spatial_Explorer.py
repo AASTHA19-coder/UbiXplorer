@@ -498,64 +498,66 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 # ==================================================
 # REGION LABEL OVERLAY
 # ==================================================
+    # ==================================================
+    # REGION LABEL OVERLAY
+    # ==================================================
 
-if species == "human":
+    if species == "human":
 
-    label_positions = {
+        label_positions = {
 
-        "Prefrontal Cortex": (6500, 5000),
-        "Temporal Cortex": (6500, 15000),
-        "Hippocampus": (11500, 7000),
-        "Cingulate Cortex": (11500, 15000),
-        "White Matter": (18000, 11000)
-    }
+            "Prefrontal Cortex": (6500, 5000),
+            "Temporal Cortex": (6500, 15000),
+            "Hippocampus": (11500, 7000),
+            "Cingulate Cortex": (11500, 15000),
+            "White Matter": (18000, 11000)
+        }
 
-else:
+    else:
 
-    label_positions = {
+        label_positions = {
 
-        "Striatum": (2500, 3000),
-        "Cortex": (2500, 7500),
-        "Hippocampus": (4500, 4500),
-        "Thalamus": (4500, 8000),
-        "White Matter": (7200, 5000)
-    }
+            "Striatum": (2500, 3000),
+            "Cortex": (2500, 7500),
+            "Hippocampus": (4500, 4500),
+            "Thalamus": (4500, 8000),
+            "White Matter": (7200, 5000)
+        }
 
-# --------------------------------------------------
-# DRAW LABELS
-# --------------------------------------------------
+    # --------------------------------------------------
+    # DRAW LABELS
+    # --------------------------------------------------
 
-for region, (lx, ly) in label_positions.items():
+    for region, (lx, ly) in label_positions.items():
 
-    ax.text(
+        ax.text(
 
-        lx,
-        ly,
+            lx,
+            ly,
 
-        region,
+            region,
 
-        fontsize=9,
+            fontsize=9,
 
-        color="white",
+            color="white",
 
-        weight="bold",
+            weight="bold",
 
-        ha="center",
+            ha="center",
 
-        alpha=0.9,
+            alpha=0.9,
 
-        bbox=dict(
+            bbox=dict(
 
-            facecolor="black",
+                facecolor="black",
 
-            alpha=0.35,
+                alpha=0.35,
 
-            edgecolor="none",
+                edgecolor="none",
 
-            pad=2
+                pad=2
+            )
         )
-    )
-
     # ==================================================
     # REGION INTERPRETATION
     # ==================================================
