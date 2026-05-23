@@ -501,7 +501,9 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
         y.min()
     ],
 
-    alpha=0.38
+    alpha=0.38,
+
+    aspect="auto"
 )
 
         # ==================================================
