@@ -444,42 +444,67 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
     # ==================================================
     # TISSUE BACKGROUND IMAGE
     # ==================================================
-    if species == "human":
+        # ==================================================
+    # OPTIONAL TISSUE BACKGROUND
+    # ==================================================
 
-        tissue_path = (
+    from pathlib import Path
 
-            BASE_DIR /
-            "assets" /
-            "human" /
-            "reference" /
-            "tissue_hires_image.png"
-        )
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
-    else:
+    tissue_img = None
 
-        tissue_path = (
+    try:
 
-            BASE_DIR /
-            "assets" /
-            "mouse" /
-            "reference" /
-            "tissue_hires_image.png"
-        )
+        if species == "human":
+
+            tissue_path = (
+
+                BASE_DIR /
+                "assets" /
+                "human" /
+                "reference" /
+                "tissue_hires_image.png"
+            )
+
+        else:
+
+            tissue_path = (
+
+                BASE_DIR /
+                "assets" /
+                "mouse" /
+                "reference" /
+                "tissue_hires_image.png"
+            )
+
+        tissue_img = plt.imread(str(tissue_path))
+
+    except Exception as e:
+
+        st.warning(f"Tissue image not loaded: {e}")
+
+    # --------------------------------------------------
+    # DRAW IMAGE IF AVAILABLE
+    # --------------------------------------------------
+
+    if tissue_img is not None:
+
         ax.imshow(
 
-        tissue_img,
+            tissue_img,
 
-        extent=[
-            x.min(),
-            x.max(),
-            y.max(),
-            y.min()
-        ],
+            extent=[
+                x.min(),
+                x.max(),
+                y.max(),
+                y.min()
+            ],
 
-        alpha=0.38
-    )
+            alpha=0.38
+        )
 
-    # ==================================================
+        # ==================================================
     # SUBTLE BACKGROUND TISSUE
     # ==================================================
 
