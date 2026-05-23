@@ -451,57 +451,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
     # REGION-BASED BACKGROUND COLORING
     # ==================================================
 
-    region_colors = {
-
-    # HUMAN
-    "Prefrontal Cortex": "#6d5efc",
-    "Temporal Cortex": "#3b82f6",
-    "Hippocampus": "#14b8a6",
-    "Cingulate Cortex": "#f59e0b",
-    "White Matter": "#64748b",
-
-    # MOUSE
-    "Striatum": "#8b5cf6",
-    "Cortex": "#2563eb",
-    "Thalamus": "#ef4444"
-}
-
-
-    bg_colors = []
-
-    for xi, yi in zip(x, y):
-
-        region = assign_brain_region(
-            xi,
-            yi,
-            species=species
-        )
-
-        bg_colors.append(
-
-            region_colors.get(
-                region,
-                "#334155"
-            )
-        )
-
-    # --------------------------------------------------
-    # DRAW BACKGROUND
-    # --------------------------------------------------
-
-    ax.scatter(
-
-        x,
-        y,
-
-        c=bg_colors,
-
-        s=18,
-
-        alpha=0.35,
-
-        edgecolors="none"
-    )
+  
 
     # ==================================================
     # HOTSPOTS
@@ -542,7 +492,71 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
     )
 
     clean_axis(ax, x, y)
-    
+        # ==================================================
+    # SUBTLE ANATOMICAL OVERLAYS
+    # ==================================================
+
+    overlays = []
+
+    if species == "human":
+
+        overlays = [
+
+            ("Prefrontal Cortex", 7000, 5000, "#8b5cf6"),
+            ("Temporal Cortex", 7000, 15000, "#2563eb"),
+            ("Hippocampus", 11500, 8000, "#14b8a6"),
+            ("Cingulate Cortex", 11500, 15000, "#f59e0b"),
+            ("White Matter", 18000, 11000, "#94a3b8")
+        ]
+
+    else:
+
+        overlays = [
+
+            ("Striatum", 2600, 3000, "#8b5cf6"),
+            ("Cortex", 2600, 7600, "#2563eb"),
+            ("Hippocampus", 4700, 4300, "#14b8a6"),
+            ("Thalamus", 4700, 7600, "#ef4444"),
+            ("White Matter", 7200, 5000, "#94a3b8")
+        ]
+
+    # --------------------------------------------------
+    # DRAW SOFT OVERLAYS
+    # --------------------------------------------------
+
+    for region, lx, ly, clr in overlays:
+
+        ax.scatter(
+
+            [lx],
+            [ly],
+
+            s=22000,
+
+            c=clr,
+
+            alpha=0.06,
+
+            edgecolors="none"
+        )
+
+        ax.text(
+
+            lx,
+            ly,
+
+            region,
+
+            fontsize=8,
+
+            color="white",
+
+            ha="center",
+
+            alpha=0.75,
+
+            weight="bold"
+        )
 # ==================================================
 # REGION LABEL OVERLAY
 # ==================================================
