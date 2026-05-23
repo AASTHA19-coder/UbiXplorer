@@ -439,6 +439,8 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
     )
 
     hot = z > 2
+    from pathlib import Path
+    BASE_DIR = Path(__file__).resolve().parent.parent
     # ==================================================
     # TISSUE BACKGROUND IMAGE
     # ==================================================
