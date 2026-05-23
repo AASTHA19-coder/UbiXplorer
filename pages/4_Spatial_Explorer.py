@@ -600,20 +600,65 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
         weight="bold"
     )
 
-    # ==================================================
-    # REMOVE AXES
-    # ==================================================
+# ==================================================
+# CLEAN MINIMAL AXES
+# ==================================================
 
-    ax.set_xticks([])
-    ax.set_yticks([])
+ax.set_xlabel(
 
-    for spine in ax.spines.values():
+    "Spatial X",
 
-        spine.set_visible(False)
+    color="white",
 
-    ax.invert_yaxis()
+    fontsize=10,
 
-    ax.set_aspect("auto")
+    alpha=0.75
+)
+
+ax.set_ylabel(
+
+    "Spatial Y",
+
+    color="white",
+
+    fontsize=10,
+
+    alpha=0.75
+)
+
+xt = np.linspace(
+    np.min(x),
+    np.max(x),
+    4
+)
+
+yt = np.linspace(
+    np.min(y),
+    np.max(y),
+    4
+)
+
+ax.set_xticks(xt)
+ax.set_yticks(yt)
+
+ax.tick_params(
+
+    colors="white",
+
+    labelsize=8,
+
+    length=0,
+
+    alpha=0.45
+)
+
+for spine in ax.spines.values():
+
+    spine.set_visible(False)
+
+ax.invert_yaxis()
+
+ax.set_aspect("auto")
 
     # ==================================================
     # REGION LABELS
