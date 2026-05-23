@@ -431,6 +431,9 @@ def spatial_map(ax, adata, vals, ttl):
 # ======================================================
 # HOTSPOT MAP
 # ======================================================
+# ======================================================
+# HOTSPOT MAP
+# ======================================================
 def hotspot_map(ax, adata, vals, ttl, species="human"):
 
     import seaborn as sns
@@ -489,7 +492,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
         st.warning(f"Tissue image not loaded: {e}")
 
     # ==================================================
-    # BLACK BACKGROUND
+    # BACKGROUND
     # ==================================================
 
     ax.set_facecolor("black")
@@ -511,13 +514,13 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
                 y.min()
             ],
 
-            alpha=0.14,
+            alpha=0.07,
 
             aspect="auto"
         )
 
     # ==================================================
-    # SUBTLE TISSUE SPOTS
+    # TISSUE SPOTS
     # ==================================================
 
     ax.scatter(
@@ -527,9 +530,9 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         c="#94a3b8",
 
-        s=8,
+        s=12,
 
-        alpha=0.12,
+        alpha=0.28,
 
         edgecolors="none"
     )
@@ -545,15 +548,15 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         fill=True,
 
-        cmap="magma",
+        cmap="inferno",
 
-        alpha=0.78,
+        alpha=0.38,
 
-        levels=200,
+        levels=60,
 
-        thresh=0.03,
+        thresh=0.05,
 
-        bw_adjust=1.1,
+        bw_adjust=0.55,
 
         linewidths=0,
 
@@ -569,13 +572,15 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
         x[hot],
         y[hot],
 
-        c="#ffb4a2",
+        c="#ff8fa3",
 
-        s=6,
+        s=18,
 
-        alpha=0.75,
+        alpha=0.9,
 
-        edgecolors="none",
+        edgecolors="white",
+
+        linewidth=0.2,
 
         zorder=5
     )
@@ -657,7 +662,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
             ha="center",
 
-            alpha=0.55
+            alpha=0.60
         )
 
     # ==================================================
