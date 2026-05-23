@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 # ======================================================
 # PAGE CONFIG
-# ======================================================
+# ======================================================f
 st.set_page_config(
     page_title="Spatial Explorer",
     #page_icon="🧠",
@@ -514,7 +514,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
                 y.min()
             ],
 
-            alpha=0.07,
+            alpha=0.03,
 
             aspect="auto"
         )
@@ -532,7 +532,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         s=12,
 
-        alpha=0.28,
+        alpha=0.03,
 
         edgecolors="none"
     )
@@ -543,25 +543,25 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
     sns.kdeplot(
 
-        x=x[hot],
-        y=y[hot],
+    x=x[hot],
+    y=y[hot],
 
-        fill=True,
+    fill=True,
 
-        cmap="inferno",
+    cmap="inferno",
 
-        alpha=0.38,
+    alpha=0.50,
 
-        levels=60,
+    levels=45,
 
-        thresh=0.05,
+    thresh=0.12,
 
-        bw_adjust=0.55,
+    bw_adjust=0.38,
 
-        linewidths=0,
+    linewidths=0,
 
-        ax=ax
-    )
+    ax=ax
+)
 
     # ==================================================
     # HOTSPOT CORE POINTS
@@ -574,7 +574,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         c="#ff8fa3",
 
-        s=18,
+        s=10,
 
         alpha=0.9,
 
@@ -645,6 +645,10 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
     # DRAW LABELS
     # ==================================================
 
+        # ==================================================
+    # DRAW LABELS
+    # ==================================================
+
     for txt, lx, ly in labels:
 
         ax.text(
@@ -654,17 +658,31 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
             txt,
 
-            fontsize=9,
+            fontsize=10,
 
-            color="#e2e8f0",
+            color="white",
 
             weight="bold",
 
             ha="center",
 
-            alpha=0.60
-        )
+            va="center",
 
+            alpha=0.92,
+
+            zorder=10,
+
+            bbox=dict(
+
+                facecolor="black",
+
+                alpha=0.18,
+
+                edgecolor="none",
+
+                boxstyle="round,pad=0.15"
+            )
+        )
     # ==================================================
     # REGION INTERPRETATION
     # ==================================================
