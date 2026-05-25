@@ -3,7 +3,6 @@ from PIL import Image
 
 st.set_page_config(
     page_title="UbiXplorer",
-    #page_icon="🧬",
     layout="wide"
 )
 
@@ -140,7 +139,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ASSETS = BASE_DIR / "assets"
 
 logo_path = ASSETS / "logo.svg"
-mnfg_path = ASSETS / "MNFG.svg"
+#mnfg_path = ASSETS / "MNFG.svg"
 
 a, b, c = st.columns([1.2,5,1.2], vertical_alignment="center")
 
@@ -150,11 +149,11 @@ with a:
 with b:
     st.markdown("<div class='title'>UbiXplorer</div>", unsafe_allow_html=True)
     st.markdown("<div class='subtitle'>Ubiquitin-Centric Spatial Analysis Platform</div>", unsafe_allow_html=True)
-    st.markdown("<div class='tag'>Ubiquitin | Neurodegeneration | Cross-Species Analysis</div>", unsafe_allow_html=True)
+    st.markdown("<div class='tag'>Ubiquitin | Neurobiology | Cross-Species Analysis</div>", unsafe_allow_html=True)
 
-with c:
-    st.markdown("<div style='margin-top:18px;'></div>", unsafe_allow_html=True)
-    st.image(str(mnfg_path), width=170)
+#with c:
+#    st.markdown("<div style='margin-top:18px;'></div>", unsafe_allow_html=True)
+#    st.image(str(mnfg_path), width=170)
 # ======================================================
 # HERO
 # ======================================================
