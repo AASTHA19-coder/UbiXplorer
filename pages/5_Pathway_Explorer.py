@@ -197,9 +197,6 @@ def get_string_interactions(query_gene):
 
         return [query_gene], []
 
-# =========================================================
-# GET ENRICHMENT GENES
-# =========================================================
 
 # =========================================================
 # GET ENRICHMENT GENES
@@ -367,10 +364,10 @@ c4.metric(
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
 
-    "STRING Network",
-    "Enrichment",
-    "Sankey",
-    "Gene Activation Heatmap",
+    "UPS Interaction Landscape: STRING Analysis",
+    "Pathway Enrichment",
+    "Gene to Pathway Mapping",
+    "Functional Overlap Arhchitecture",
     "Ontology"
 
 ])
@@ -588,11 +585,7 @@ with tab2:
     )
 
 # =========================================================
-# TAB 3 — SANKEY
-# =========================================================
-
-# =========================================================
-# TAB 3 — SANKEY
+# TAB 3 — SANKEY/ GENE TO PATHWAY MAPPING
 # =========================================================
 
 with tab3:
@@ -873,12 +866,12 @@ with tab3:
 # =========================================================
 
 # =========================================================
-# TAB 4 — HEATMAP
+# TAB 4 — FUNCTIONAL OVERLAP ARCHITECTURE
 
 
 with tab4:
 
-    st.subheader("Pathway Activation Heatmap")
+    st.subheader("Functional Mapping")
 
     # -----------------------------------------------------
     # TOP PATHWAYS
@@ -935,7 +928,7 @@ with tab4:
 
 with tab4:
 
-    st.subheader("🧬 Functional Overlap Architecture")
+    st.subheader("Functional Overlap Architecture")
 
     st.caption(
         "Shared gene architecture across enriched biological pathways."
@@ -1138,7 +1131,7 @@ with tab4:
     # BINARY OVERLAP DOT MATRIX
     # =====================================================
 
-    st.subheader("🧬 Gene–Pathway Membership Matrix")
+    st.subheader("Gene–Pathway Membership Matrix")
 
     dot_x = []
     dot_y = []
