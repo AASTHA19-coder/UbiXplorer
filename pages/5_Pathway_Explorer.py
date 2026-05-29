@@ -73,14 +73,14 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown(
-    """
-    <div class='sub'>
-    AI-powered systems biology intelligence engine for ubiquitin pathway exploration
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+#st.markdown(
+ #   """
+  #  <div class='sub'>
+   # AI-powered systems biology intelligence engine for ubiquitin pathway exploration
+    #</div>
+    #""",
+    #unsafe_allow_html=True
+#)
 
 # =========================================================
 # SOURCE
