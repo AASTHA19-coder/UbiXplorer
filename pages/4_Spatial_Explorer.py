@@ -96,7 +96,33 @@ source = st.radio(
     ["Reference Atlas", "Uploaded Genes"],
     horizontal=True
 )
+# ======================================================
+# EXPORT THEME
+# ======================================================
 
+export_theme = st.radio(
+
+    "Export Theme",
+
+    ["Dark", "Publication White"],
+
+    horizontal=True
+)
+# ======================================================
+# THEME COLORS
+# ======================================================
+
+if export_theme == "Publication White":
+
+    BG = "white"
+    FONT = "black"
+    GRID = "#d1d5db"
+
+else:
+
+    BG = "#06111f"
+    FONT = "white"
+    GRID = "#334155"
 # ======================================================
 # GENE LIST
 # ======================================================
@@ -383,23 +409,23 @@ def spatial_map(ax, adata, vals, ttl):
 
     ax.set_title(
         ttl,
-        color="white",
+        color="FONT",
         fontsize=18,
         weight="bold"
     )
 
-    ax.set_facecolor("#06111f")
+    ax.set_facecolor(BG)
 
     ax.invert_yaxis()
 
     ax.set_xlabel(
         "Spatial X",
-        color="white"
+        color="FONT"
     )
 
     ax.set_ylabel(
         "Spatial Y",
-        color="white"
+        color="FONT"
     )
 
     clean_axis(ax, x, y)
@@ -413,16 +439,16 @@ def spatial_map(ax, adata, vals, ttl):
 
     cbar.set_label(
         "Spatial Burden",
-        color="white"
+        color="FONT"
     )
 
     cbar.ax.yaxis.set_tick_params(
-        color="white"
+        color="FONT"
     )
 
     plt.setp(
         cbar.ax.get_yticklabels(),
-        color="white"
+        color="FONT"
     )
 
 # ======================================================
@@ -495,7 +521,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
     # BACKGROUND
     # ==================================================
 
-    ax.set_facecolor("black")
+    ax.set_facecolor(BG)
 
     # ==================================================
     # DRAW TISSUE IMAGE
@@ -578,7 +604,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         alpha=0.9,
 
-        edgecolors="white",
+        edgecolors="black" if export_theme == "Publication White" else "white",
 
         linewidth=0.2,
 
@@ -708,7 +734,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
             fontsize=10,
 
-            color="white",
+            color="FONT",
 
             weight="bold",
 
@@ -722,7 +748,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
             bbox=dict(
 
-                facecolor="black",
+                facecolor="white" if export_theme == "Publication White" else "black",
 
                 alpha=0.18,
 
@@ -828,7 +854,7 @@ with tab1:
 
         fig, ax = plt.subplots(
             figsize=(7, 7),
-            facecolor="#06111f"
+            facecolor=BG
         )
 
         spatial_map(
@@ -857,9 +883,9 @@ with tab2:
             gene
         )
 
-        fig, ax = plt.subplots(
+        fig, ax = plt.subplots(F
             figsize=(7, 7),
-            facecolor="#06111f"
+            facecolor=BG
         )
 
         human_hot, hz, human_regions = hotspot_map(
@@ -1012,7 +1038,7 @@ with tab3:
 
         figsize=(14, 5),
 
-        facecolor="black"
+        facecolor=BG
     )
 
     # ----------------------------------------------
@@ -1039,7 +1065,7 @@ with tab3:
 
         "Human Regional Hotspots",
 
-        color="white",
+        color="FONT",
 
         fontsize=16,
 
