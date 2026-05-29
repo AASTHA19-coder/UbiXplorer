@@ -492,6 +492,9 @@ with tab1:
 # =========================================================
 # TAB 2 — ENRICHMENT
 # =========================================================
+# =========================================================
+# TAB 2 — ENRICHMENT
+# =========================================================
 
 with tab2:
 
@@ -519,17 +522,32 @@ with tab2:
 
     fig.update_layout(
 
-    paper_bgcolor=FIG_BG,
-    plot_bgcolor=FIG_BG,
+        paper_bgcolor=FIG_BG,
+        plot_bgcolor=FIG_BG,
 
-    font=dict(
-        color=FONT_COLOR
-    ),
-        st.plotly_chart(
+        font=dict(
+            color=FONT_COLOR
+        ),
+
+        xaxis=dict(
+            showgrid=False,
+            tickfont=dict(
+                color=AXIS_COLOR
+            )
+        ),
+
+        yaxis=dict(
+            showgrid=False,
+            tickfont=dict(
+                color=AXIS_COLOR
+            )
+        )
+    )
+
+    st.plotly_chart(
         fig,
         use_container_width=True
     )
-
 # =========================================================
 # TAB 3 — SANKEY
 # =========================================================
