@@ -126,27 +126,6 @@ export_theme = st.radio(
 # =========================================================
 # THEME COLORS
 # =========================================================
-
-if export_theme == "Publication White":
-
-    PLOT_TEMPLATE = "plotly_white"
-
-    BG = "white"
-
-    FONT = "black"
-
-    EDGE = "#d1d5db"
-
-else:
-
-    PLOT_TEMPLATE = "plotly_dark"
-
-    BG = "#020617"
-
-    FONT = "white"
-
-    EDGE = "#334155"
-
 if export_theme == "Publication White":
 
     st.markdown(
@@ -155,6 +134,19 @@ if export_theme == "Publication White":
 
         .stApp{
             background:white !important;
+        }
+
+        .stRadio label,
+        .stSelectbox label,
+        .stMarkdown,
+        .stText,
+        .stCaption,
+        .stMetric,
+        .stTabs,
+        p,
+        div,
+        span {
+
             color:black !important;
         }
 
