@@ -1,5 +1,7 @@
 # =========================================================
-# PATHWAY EXPLORER — FINAL CLEAN VERSION
+# PATHWAY EXPLORER — FINAL FIXED VERSION
+# ONLY FIGURES SWITCH TO WHITE EXPORT MODE
+# UI ALWAYS REMAINS DARK
 # =========================================================
 
 import streamlit as st
@@ -22,7 +24,7 @@ st.set_page_config(
 )
 
 # =========================================================
-# DARK UI CSS (KEEP FIXED)
+# ORIGINAL DARK UI CSS (KEEP FIXED)
 # =========================================================
 
 st.markdown("""
@@ -105,16 +107,16 @@ export_theme = st.radio(
 )
 
 # =========================================================
-# FIGURE-ONLY THEMING
+# FIGURE EXPORT ENGINE ONLY
 # =========================================================
 
 if export_theme == "Publication White":
 
-    PLOT_TEMPLATE = "plotly_white"
-
     FIG_BG = "white"
 
     FONT_COLOR = "black"
+
+    PLOT_TEMPLATE = "plotly_white"
 
     EDGE_COLOR = "rgba(100,116,139,0.35)"
 
@@ -122,11 +124,11 @@ if export_theme == "Publication White":
 
 else:
 
-    PLOT_TEMPLATE = "plotly_dark"
-
     FIG_BG = "#020617"
 
     FONT_COLOR = "white"
+
+    PLOT_TEMPLATE = "plotly_dark"
 
     EDGE_COLOR = "rgba(148,163,184,0.25)"
 
@@ -445,25 +447,20 @@ with tab1:
 
         xaxis=dict(
             showgrid=False,
-            zeroline=False
+            zeroline=False,
+            visible=False
         ),
 
         yaxis=dict(
             showgrid=False,
-            zeroline=False
+            zeroline=False,
+            visible=False
         )
     )
 
     st.plotly_chart(
         fig,
-        use_container_width=True,
-        config={
-            "displaylogo": False,
-            "toImageButtonOptions": {
-                "format": "png",
-                "scale": 4
-            }
-        }
+        use_container_width=True
     )
 
 # =========================================================
@@ -589,39 +586,63 @@ with tab3:
     )
 
 # =========================================================
-# TAB 4 — HEATMAP
+# TAB 4 — DOT MATRIX
 # =========================================================
 
 with tab4:
 
     st.subheader("Gene Activation Heatmap")
 
-    heat_df = enrich_df.head(10).copy()
+    pathways = enrich_df.head(8)["Pathway"].tolist()
 
-    pathways = heat_df["Pathway"].tolist()
+    genes = enrich_genes[:12]
 
-    genes = enrich_genes[:10]
+    dot_x = []
+    dot_y = []
 
-    matrix = np.random.rand(
-        len(genes),
-        len(pathways)
-    )
+    dot_color = []
+    dot_size = []
 
-    fig = px.imshow(
+    for g in genes:
 
-        matrix,
+        for p in pathways:
 
-        x=pathways,
-        y=genes,
+            dot_x.append(p)
+            dot_y.append(g)
 
-        color_continuous_scale="Turbo",
+            if np.random.rand() > 0.45:
 
-        template=PLOT_TEMPLATE,
+                dot_color.append("#ec4899")
+                dot_size.append(18)
 
-        aspect="auto"
+            else:
+
+                dot_color.append(EMPTY_DOT)
+                dot_size.append(8)
+
+    fig = go.Figure()
+
+    fig.add_trace(
+
+        go.Scatter(
+
+            x=dot_x,
+            y=dot_y,
+
+            mode="markers",
+
+            marker=dict(
+
+                size=dot_size,
+
+                color=dot_color
+            )
+        )
     )
 
     fig.update_layout(
+
+        template=PLOT_TEMPLATE,
 
         height=760,
 
