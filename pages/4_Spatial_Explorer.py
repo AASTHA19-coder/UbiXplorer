@@ -381,13 +381,13 @@ def clean_axis(ax, x, y):
 
     ax.set_xticklabels(
         [f"{int(i)}" for i in xt],
-        color="white",
+        color=FONT,
         fontsize=9
     )
 
     ax.set_yticklabels(
         [f"{int(i)}" for i in yt],
-        color="white",
+        color=FONT,
         fontsize=9
     )
   
@@ -409,7 +409,7 @@ def spatial_map(ax, adata, vals, ttl):
 
     ax.set_title(
         ttl,
-        color="FONT",
+        color=FONT,
         fontsize=18,
         weight="bold"
     )
@@ -420,12 +420,12 @@ def spatial_map(ax, adata, vals, ttl):
 
     ax.set_xlabel(
         "Spatial X",
-        color="FONT"
+        color=FONT
     )
 
     ax.set_ylabel(
         "Spatial Y",
-        color="FONT"
+        color=FONT
     )
 
     clean_axis(ax, x, y)
@@ -439,18 +439,17 @@ def spatial_map(ax, adata, vals, ttl):
 
     cbar.set_label(
         "Spatial Burden",
-        color="FONT"
+        color=FONT
     )
 
     cbar.ax.yaxis.set_tick_params(
-        color="FONT"
+        color=FONT
     )
 
     plt.setp(
         cbar.ax.get_yticklabels(),
-        color="FONT"
+        color=FONT
     )
-
 # ======================================================
 # HOTSPOT MAP
 # ======================================================
@@ -619,7 +618,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         ttl,
 
-        color="white",
+        color=FONT,
 
         fontsize=20,
 
@@ -637,7 +636,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         "Spatial X",
 
-        color="white",
+        color=FONT,
 
         fontsize=10,
 
@@ -648,7 +647,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
         "Spatial Y",
 
-        color="white",
+        color=FONT,
 
         fontsize=10,
 
@@ -674,7 +673,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
     ax.tick_params(
 
-        colors="white",
+        colors=FONT,
 
         labelsize=8,
 
