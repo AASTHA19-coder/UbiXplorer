@@ -459,34 +459,31 @@ with tab1:
 
     fig.update_layout(
 
-        template=PLOT_TEMPLATE,
+    template=PLOT_TEMPLATE,
 
-        height=760,
+    height=760,
 
-        paper_bgcolor=FIG_BG,
-        plot_bgcolor=FIG_BG,
+    paper_bgcolor=FIG_BG,
+    plot_bgcolor=FIG_BG,
 
-        font=dict(
-            color=FONT_COLOR
-        ),
+    font=dict(
+        color=FONT_COLOR
+    ),
 
-        showlegend=False,
+    showlegend=False,
 
-        xaxis=dict(
-            showgrid=False,
-            zeroline=False,
-            visible=False,
-            tickfont=dict(color=AXIS_COLOR)
-        ),
+    xaxis=dict(
+        showgrid=False,
+        zeroline=False,
+        visible=False
+    ),
 
-        yaxis=dict(
-            showgrid=False,
-            zeroline=False,
-            visible=False,
-            tickfont=dict(color=AXIS_COLOR)
-        )
+    yaxis=dict(
+        showgrid=False,
+        zeroline=False,
+        visible=False
     )
-
+)
     st.plotly_chart(
         fig,
         use_container_width=True
@@ -522,30 +519,27 @@ with tab2:
 
     fig.update_layout(
 
-        paper_bgcolor=FIG_BG,
-        plot_bgcolor=FIG_BG,
+    paper_bgcolor=FIG_BG,
+    plot_bgcolor=FIG_BG,
 
-        font=dict(
-            color=FONT_COLOR
-        ),
+    font=dict(
+        color=FONT_COLOR
+    ),
 
-        xaxis=dict(
-            showgrid=False,
-            tickfont=dict(color=AXIS_COLOR),
-            titlefont=dict(color=AXIS_COLOR)
-        ),
+    xaxis=dict(
+        showgrid=False,
+        tickfont=dict(
+            color=AXIS_COLOR
+        )
+    ),
 
-        yaxis=dict(
-            showgrid=False,
-            tickfont=dict(color=AXIS_COLOR),
-            titlefont=dict(color=AXIS_COLOR)
+    yaxis=dict(
+        showgrid=False,
+        tickfont=dict(
+            color=AXIS_COLOR
         )
     )
-
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
+)
 
 # =========================================================
 # TAB 3 — SANKEY
@@ -681,16 +675,29 @@ with tab4:
 
     fig.update_layout(
 
-        template=PLOT_TEMPLATE,
+    template=PLOT_TEMPLATE,
 
-        height=760,
+    height=760,
 
-        paper_bgcolor=FIG_BG,
-        plot_bgcolor=FIG_BG,
+    paper_bgcolor=FIG_BG,
+    plot_bgcolor=FIG_BG,
 
-        font=dict(
-            color=FONT_COLOR
-        ),
+    font=dict(
+        color=FONT_COLOR
+    ),
+
+    xaxis=dict(
+        tickfont=dict(
+            color=AXIS_COLOR
+        )
+    ),
+
+    yaxis=dict(
+        tickfont=dict(
+            color=AXIS_COLOR
+        )
+    )
+),
 
         xaxis=dict(
             tickfont=dict(color=AXIS_COLOR),
