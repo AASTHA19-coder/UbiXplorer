@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 # ======================================================
 # PAGE CONFIG
-# ======================================================f
+# ======================================================
 st.set_page_config(
     page_title="Spatial Explorer",
     #page_icon="🧠",
@@ -733,7 +733,7 @@ def hotspot_map(ax, adata, vals, ttl, species="human"):
 
             fontsize=10,
 
-            color="FONT",
+            color=FONT,
 
             weight="bold",
 
@@ -829,7 +829,7 @@ with tab1:
 
         fig, ax = plt.subplots(
             figsize=(7, 7),
-            facecolor="#06111f"
+            facecolor=BG
         )
 
         spatial_map(
@@ -882,7 +882,7 @@ with tab2:
             gene
         )
 
-        fig, ax = plt.subplots(F
+        fig, ax = plt.subplots(
             figsize=(7, 7),
             facecolor=BG
         )
@@ -909,7 +909,7 @@ with tab2:
 
         fig, ax = plt.subplots(
             figsize=(7, 7),
-            facecolor="#06111f"
+            facecolor=BG
         )
 
         mouse_hot, mz, mouse_regions = hotspot_map(
@@ -1064,14 +1064,14 @@ with tab3:
 
         "Human Regional Hotspots",
 
-        color="FONT",
+        color=FONT,
 
         fontsize=16,
 
         weight="bold"
     )
 
-    axes[0].set_facecolor("black")
+    axes[0].set_facecolor(BG)
 
     axes[0].tick_params(
 
@@ -1142,7 +1142,7 @@ with tab3:
         weight="bold"
     )
 
-    axes[1].set_facecolor("black")
+    axes[1].set_facecolor(BG)
 
     axes[1].tick_params(
 
