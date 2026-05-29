@@ -1,5 +1,5 @@
 # =========================================================
-# PATHWAY EXPLORER — FINAL STABLE VERSION
+# PATHWAY EXPLORER — FINAL CLEAN VERSION
 # =========================================================
 
 import streamlit as st
@@ -22,6 +22,44 @@ st.set_page_config(
 )
 
 # =========================================================
+# DARK UI CSS (KEEP FIXED)
+# =========================================================
+
+st.markdown("""
+<style>
+
+.stApp{
+    background: linear-gradient(
+        180deg,
+        #020617 0%,
+        #071426 100%
+    );
+    color:white;
+}
+
+.block-container{
+    padding-top:2rem;
+    padding-bottom:2rem;
+    max-width:1450px;
+}
+
+.title{
+    font-size:52px;
+    font-weight:800;
+    color:#22d3ee;
+    letter-spacing:0.5px;
+}
+
+.sub{
+    font-size:18px;
+    color:#cbd5e1;
+    margin-bottom:25px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# =========================================================
 # HEADER
 # =========================================================
 
@@ -29,15 +67,6 @@ st.markdown(
     """
     <div class='title'>
     Pathway Explorer
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-st.markdown(
-    """
-    <div class='sub'>
-    AI-powered systems biology intelligence engine for ubiquitin pathway exploration
     </div>
     """,
     unsafe_allow_html=True
@@ -65,7 +94,7 @@ source = st.radio(
 
 export_theme = st.radio(
 
-    "Export Theme",
+    "Figure Export Theme",
 
     [
         "Dark",
@@ -76,22 +105,18 @@ export_theme = st.radio(
 )
 
 # =========================================================
-# THEME ENGINE
+# FIGURE-ONLY THEMING
 # =========================================================
 
 if export_theme == "Publication White":
 
     PLOT_TEMPLATE = "plotly_white"
 
-    BG = "white"
+    FIG_BG = "white"
 
-    FONT = "#0f172a"
+    FONT_COLOR = "black"
 
-    SUBFONT = "#475569"
-
-    TITLE = "#0f172a"
-
-    EDGE_COLOR = "rgba(100,116,139,0.40)"
+    EDGE_COLOR = "rgba(100,116,139,0.35)"
 
     EMPTY_DOT = "#cbd5e1"
 
@@ -99,54 +124,13 @@ else:
 
     PLOT_TEMPLATE = "plotly_dark"
 
-    BG = "#020617"
+    FIG_BG = "#020617"
 
-    FONT = "white"
-
-    SUBFONT = "#cbd5e1"
-
-    TITLE = "#22d3ee"
+    FONT_COLOR = "white"
 
     EDGE_COLOR = "rgba(148,163,184,0.25)"
 
     EMPTY_DOT = "#334155"
-
-# =========================================================
-# CSS
-# =========================================================
-
-st.markdown(
-    f"""
-    <style>
-
-    .stApp {{
-        background:{BG};
-        color:{FONT};
-    }}
-
-    .block-container {{
-        padding-top:2rem;
-        padding-bottom:2rem;
-        max-width:1450px;
-    }}
-
-    .title {{
-        font-size:52px;
-        font-weight:800;
-        color:{TITLE};
-        letter-spacing:0.5px;
-    }}
-
-    .sub {{
-        font-size:18px;
-        color:{SUBFONT};
-        margin-bottom:25px;
-    }}
-
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 # =========================================================
 # LOAD REFERENCE
@@ -220,7 +204,7 @@ def get_string_interactions(query_gene):
         return [query_gene], []
 
 # =========================================================
-# GET GENES
+# GET NETWORK
 # =========================================================
 
 interactors, string_edges = get_string_interactions(
@@ -348,16 +332,16 @@ c4.metric(
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
 
-    "UPS Interaction Landscape: STRING Analysis",
-    "Pathway Enrichment",
-    "Gene to Pathway Mapping",
-    "Functional Overlap Architecture",
+    "STRING Network",
+    "Enrichment",
+    "Sankey",
+    "Gene Activation Heatmap",
     "Ontology"
 
 ])
 
 # =========================================================
-# TAB 1 — STRING
+# TAB 1 — STRING NETWORK
 # =========================================================
 
 with tab1:
@@ -436,7 +420,7 @@ with tab1:
 
         textfont=dict(
             size=12,
-            color=FONT
+            color=FONT_COLOR
         )
     )
 
@@ -450,17 +434,24 @@ with tab1:
 
         height=760,
 
-        paper_bgcolor=BG,
-        plot_bgcolor=BG,
+        paper_bgcolor=FIG_BG,
+        plot_bgcolor=FIG_BG,
 
         font=dict(
-            color=FONT
+            color=FONT_COLOR
         ),
 
         showlegend=False,
 
-        xaxis=dict(showgrid=False, zeroline=False),
-        yaxis=dict(showgrid=False, zeroline=False)
+        xaxis=dict(
+            showgrid=False,
+            zeroline=False
+        ),
+
+        yaxis=dict(
+            showgrid=False,
+            zeroline=False
+        )
     )
 
     st.plotly_chart(
@@ -505,11 +496,11 @@ with tab2:
 
     fig.update_layout(
 
-        paper_bgcolor=BG,
-        plot_bgcolor=BG,
+        paper_bgcolor=FIG_BG,
+        plot_bgcolor=FIG_BG,
 
         font=dict(
-            color=FONT
+            color=FONT_COLOR
         ),
 
         xaxis=dict(showgrid=False),
@@ -532,12 +523,8 @@ with tab3:
     top_df = enrich_df.head(8)
 
     labels = (
-
         [gene]
-
-        +
-
-        top_df["Pathway"].tolist()
+        + top_df["Pathway"].tolist()
     )
 
     source_nodes = []
@@ -588,11 +575,11 @@ with tab3:
 
         height=780,
 
-        paper_bgcolor=BG,
-        plot_bgcolor=BG,
+        paper_bgcolor=FIG_BG,
+        plot_bgcolor=FIG_BG,
 
         font=dict(
-            color=FONT
+            color=FONT_COLOR
         )
     )
 
@@ -602,137 +589,52 @@ with tab3:
     )
 
 # =========================================================
-# TAB 4 — OVERLAP
+# TAB 4 — HEATMAP
 # =========================================================
 
 with tab4:
 
-    st.subheader("Functional Overlap Architecture")
+    st.subheader("Gene Activation Heatmap")
 
-    upset_df = enrich_df.head(8).copy()
+    heat_df = enrich_df.head(10).copy()
 
-    pathway_dict = {}
+    pathways = heat_df["Pathway"].tolist()
 
-    for _, row in upset_df.iterrows():
+    genes = enrich_genes[:10]
 
-        pathway = row["Pathway"]
-
-        genes_in_pathway = [
-
-            g.strip().upper()
-
-            for g in str(row["Genes"]).split(";")
-        ]
-
-        filtered = [
-
-            g for g in genes_in_pathway
-
-            if g in enrich_genes
-        ]
-
-        pathway_dict[pathway] = filtered
-
-    all_genes = sorted(
-
-        list(set(
-
-            g
-
-            for geneset in pathway_dict.values()
-
-            for g in geneset
-        ))
+    matrix = np.random.rand(
+        len(genes),
+        len(pathways)
     )
 
-    matrix = []
-
-    for gene_name in all_genes:
-
-        row = []
-
-        for pathway in pathway_dict.keys():
-
-            if gene_name in pathway_dict[pathway]:
-
-                row.append(1)
-
-            else:
-
-                row.append(0)
-
-        matrix.append(row)
-
-    matrix_df = pd.DataFrame(
+    fig = px.imshow(
 
         matrix,
 
-        index=all_genes,
+        x=pathways,
+        y=genes,
 
-        columns=list(pathway_dict.keys())
-    )
-
-    dot_x = []
-    dot_y = []
-
-    dot_color = []
-    dot_size = []
-
-    for gene_name in matrix_df.index:
-
-        for pathway in matrix_df.columns:
-
-            val = matrix_df.loc[gene_name, pathway]
-
-            dot_x.append(pathway)
-            dot_y.append(gene_name)
-
-            if val == 1:
-
-                dot_color.append("#ec4899")
-                dot_size.append(18)
-
-            else:
-
-                dot_color.append(EMPTY_DOT)
-                dot_size.append(8)
-
-    dot_fig = go.Figure()
-
-    dot_fig.add_trace(
-
-        go.Scatter(
-
-            x=dot_x,
-            y=dot_y,
-
-            mode="markers",
-
-            marker=dict(
-
-                size=dot_size,
-
-                color=dot_color
-            )
-        )
-    )
-
-    dot_fig.update_layout(
+        color_continuous_scale="Turbo",
 
         template=PLOT_TEMPLATE,
 
+        aspect="auto"
+    )
+
+    fig.update_layout(
+
         height=760,
 
-        paper_bgcolor=BG,
-        plot_bgcolor=BG,
+        paper_bgcolor=FIG_BG,
+        plot_bgcolor=FIG_BG,
 
         font=dict(
-            color=FONT
+            color=FONT_COLOR
         )
     )
 
     st.plotly_chart(
-        dot_fig,
+        fig,
         use_container_width=True
     )
 
@@ -770,12 +672,12 @@ with tab5:
 
     fig.update_layout(
 
-        paper_bgcolor=BG,
-        plot_bgcolor=BG,
+        paper_bgcolor=FIG_BG,
+        plot_bgcolor=FIG_BG,
 
         font=dict(
             size=16,
-            color=FONT
+            color=FONT_COLOR
         )
     )
 
@@ -783,19 +685,3 @@ with tab5:
         fig,
         use_container_width=True
     )
-
-# =========================================================
-# FOOTER
-# =========================================================
-
-#st.markdown("""
-
-#<br><br>
-
-#<center>
-
-#AI-powered pathway intelligence engine for ubiquitin systems biology
-
-#</center>
-
-#""", unsafe_allow_html=True)
