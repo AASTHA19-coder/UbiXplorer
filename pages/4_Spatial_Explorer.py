@@ -1075,7 +1075,7 @@ with tab3:
 
     axes[0].tick_params(
 
-        colors="white",
+        colors=FONT,
         labelsize=10
     )
 
@@ -1083,7 +1083,7 @@ with tab3:
 
         "Hotspot Count",
 
-        color="white"
+        color=FONT
     )
 
     axes[0].set_ylabel("")
@@ -1104,7 +1104,7 @@ with tab3:
 
             str(v),
 
-            color="white",
+            color=FONT,
 
             va="center",
 
@@ -1135,7 +1135,7 @@ with tab3:
 
         "Mouse Regional Hotspots",
 
-        color="white",
+        color=FONT,
 
         fontsize=16,
 
@@ -1146,7 +1146,7 @@ with tab3:
 
     axes[1].tick_params(
 
-        colors="white",
+        colors=FONT,
         labelsize=10
     )
 
@@ -1154,7 +1154,7 @@ with tab3:
 
         "Hotspot Count",
 
-        color="white"
+        color=FONT
     )
 
     axes[1].set_ylabel("")
@@ -1175,7 +1175,7 @@ with tab3:
 
             str(v),
 
-            color="white",
+            color=FONT,
 
             va="center",
 
