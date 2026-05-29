@@ -1,7 +1,6 @@
 # =========================================================
-# PATHWAY EXPLORER — FINAL FIXED VERSION
-# ONLY FIGURES SWITCH TO WHITE EXPORT MODE
-# UI ALWAYS REMAINS DARK
+# PATHWAY EXPLORER — FINAL MANUSCRIPT SAFE VERSION
+# DARK UI + WHITE EXPORT FIGURES
 # =========================================================
 
 import streamlit as st
@@ -24,7 +23,7 @@ st.set_page_config(
 )
 
 # =========================================================
-# ORIGINAL DARK UI CSS (KEEP FIXED)
+# ORIGINAL DARK UI
 # =========================================================
 
 st.markdown("""
@@ -74,6 +73,15 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+st.markdown(
+    """
+    <div class='sub'>
+    AI-powered systems biology intelligence engine for ubiquitin pathway exploration
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 # =========================================================
 # SOURCE
 # =========================================================
@@ -107,14 +115,18 @@ export_theme = st.radio(
 )
 
 # =========================================================
-# FIGURE EXPORT ENGINE ONLY
+# FIGURE EXPORT ENGINE
 # =========================================================
 
 if export_theme == "Publication White":
 
     FIG_BG = "white"
 
-    FONT_COLOR = "black"
+    FONT_COLOR = "#0f172a"
+
+    AXIS_COLOR = "#0f172a"
+
+    GRID_COLOR = "#d1d5db"
 
     PLOT_TEMPLATE = "plotly_white"
 
@@ -122,17 +134,33 @@ if export_theme == "Publication White":
 
     EMPTY_DOT = "#cbd5e1"
 
+    SANKEY_NODE = "#2563eb"
+
+    SANKEY_LINK = "rgba(37,99,235,0.18)"
+
+    ONTOLOGY_SCALE = "Blues"
+
 else:
 
     FIG_BG = "#020617"
 
     FONT_COLOR = "white"
 
+    AXIS_COLOR = "white"
+
+    GRID_COLOR = "#334155"
+
     PLOT_TEMPLATE = "plotly_dark"
 
     EDGE_COLOR = "rgba(148,163,184,0.25)"
 
     EMPTY_DOT = "#334155"
+
+    SANKEY_NODE = "#8b5cf6"
+
+    SANKEY_LINK = "rgba(139,92,246,0.25)"
+
+    ONTOLOGY_SCALE = "Turbo"
 
 # =========================================================
 # LOAD REFERENCE
@@ -206,7 +234,7 @@ def get_string_interactions(query_gene):
         return [query_gene], []
 
 # =========================================================
-# GET NETWORK
+# NETWORK
 # =========================================================
 
 interactors, string_edges = get_string_interactions(
@@ -353,7 +381,6 @@ with tab1:
     G = nx.Graph()
 
     for edge in string_edges:
-
         G.add_edge(edge[0], edge[1])
 
     pos = nx.spring_layout(
@@ -448,13 +475,15 @@ with tab1:
         xaxis=dict(
             showgrid=False,
             zeroline=False,
-            visible=False
+            visible=False,
+            tickfont=dict(color=AXIS_COLOR)
         ),
 
         yaxis=dict(
             showgrid=False,
             zeroline=False,
-            visible=False
+            visible=False,
+            tickfont=dict(color=AXIS_COLOR)
         )
     )
 
@@ -500,8 +529,17 @@ with tab2:
             color=FONT_COLOR
         ),
 
-        xaxis=dict(showgrid=False),
-        yaxis=dict(showgrid=False)
+        xaxis=dict(
+            showgrid=False,
+            tickfont=dict(color=AXIS_COLOR),
+            titlefont=dict(color=AXIS_COLOR)
+        ),
+
+        yaxis=dict(
+            showgrid=False,
+            tickfont=dict(color=AXIS_COLOR),
+            titlefont=dict(color=AXIS_COLOR)
+        )
     )
 
     st.plotly_chart(
@@ -550,7 +588,7 @@ with tab3:
 
             label=labels,
 
-            color="#8b5cf6"
+            color=SANKEY_NODE
         ),
 
         link=dict(
@@ -561,7 +599,7 @@ with tab3:
 
             value=values,
 
-            color="rgba(139,92,246,0.25)"
+            color=SANKEY_LINK
         )
 
     )])
@@ -576,7 +614,8 @@ with tab3:
         plot_bgcolor=FIG_BG,
 
         font=dict(
-            color=FONT_COLOR
+            color=FONT_COLOR,
+            size=15
         )
     )
 
@@ -651,6 +690,16 @@ with tab4:
 
         font=dict(
             color=FONT_COLOR
+        ),
+
+        xaxis=dict(
+            tickfont=dict(color=AXIS_COLOR),
+            titlefont=dict(color=AXIS_COLOR)
+        ),
+
+        yaxis=dict(
+            tickfont=dict(color=AXIS_COLOR),
+            titlefont=dict(color=AXIS_COLOR)
         )
     )
 
@@ -684,7 +733,7 @@ with tab5:
 
         color="EnrichmentScore",
 
-        color_continuous_scale="Turbo",
+        color_continuous_scale=ONTOLOGY_SCALE,
 
         template=PLOT_TEMPLATE,
 
