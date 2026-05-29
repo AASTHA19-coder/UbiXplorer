@@ -110,6 +110,58 @@ source = st.radio(
 
     horizontal=True
 )
+# =========================================================
+# EXPORT THEME
+# =========================================================
+
+export_theme = st.radio(
+
+    "Export Theme",
+
+    ["Dark", "Publication White"],
+
+    horizontal=True
+)
+
+# =========================================================
+# THEME COLORS
+# =========================================================
+
+if export_theme == "Publication White":
+
+    PLOT_TEMPLATE = "plotly_white"
+
+    BG = "white"
+
+    FONT = "black"
+
+    EDGE = "#d1d5db"
+
+else:
+
+    PLOT_TEMPLATE = "plotly_dark"
+
+    BG = "#020617"
+
+    FONT = "white"
+
+    EDGE = "#334155"
+
+if export_theme == "Publication White":
+
+    st.markdown(
+        """
+        <style>
+
+        .stApp{
+            background:white !important;
+            color:black !important;
+        }
+
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 # =========================================================
 # GENE INPUT
@@ -462,7 +514,7 @@ with tab1:
 
         textfont=dict(
             size=13,
-            color="white"
+            color=FONT
         )
     )
 
@@ -472,12 +524,12 @@ with tab1:
 
     fig.update_layout(
 
-        template="plotly_dark",
+        template=PLOT_TEMPLATE,
 
         height=780,
 
-        paper_bgcolor="#020617",
-        plot_bgcolor="#020617",
+        paper_bgcolor=BG,
+        plot_bgcolor=BG,
 
         showlegend=False
     )
@@ -517,19 +569,19 @@ with tab2:
 
         ],
 
-        template="plotly_dark",
+        template=PLOT_TEMPLATE,
 
         height=780
     )
 
     fig.update_layout(
 
-        paper_bgcolor="#020617",
-        plot_bgcolor="#020617",
+        paper_bgcolor=BG,
+        plot_bgcolor=BG,
 
         font=dict(
             size=15,
-            color="white"
+            color=FONT
         )
     )
 
@@ -575,7 +627,7 @@ with tab2:
 
         font=dict(
             size=15,
-            color="white"
+            color=FONT
         )
     )
 
@@ -831,15 +883,15 @@ with tab3:
 
     fig.update_layout(
 
-        template="plotly_dark",
+        template=PLOT_TEMPLATE,
 
-        paper_bgcolor="#020617",
-        plot_bgcolor="#020617",
+        paper_bgcolor=BG,
+        plot_bgcolor=BG,
 
         font=dict(
 
             size=16,
-            color="white"
+            color=FONT
 
         ),
 
@@ -1065,12 +1117,12 @@ with tab4:
 
     fig.update_layout(
 
-        template="plotly_dark",
+        template=PLOT_TEMPLATE,
 
         height=720,
 
-        paper_bgcolor="#020617",
-        plot_bgcolor="#020617",
+        paper_bgcolor=BG,
+        plot_bgcolor=BG,
 
         title=dict(
 
@@ -1078,7 +1130,7 @@ with tab4:
 
             font=dict(
                 size=24,
-                color="white"
+                color=FONT
             )
         ),
 
@@ -1111,7 +1163,7 @@ with tab4:
         ),
 
         font=dict(
-            color="white"
+            color=FONT
         ),
 
         margin=dict(
@@ -1187,12 +1239,12 @@ with tab4:
 
     dot_fig.update_layout(
 
-        template="plotly_dark",
+        template=PLOT_TEMPLATE,
 
         height=720,
 
-        paper_bgcolor="#020617",
-        plot_bgcolor="#020617",
+        paper_bgcolor=BG,
+        plot_bgcolor=BG,
 
         xaxis=dict(
 
@@ -1223,7 +1275,7 @@ with tab4:
         ),
 
         font=dict(
-            color="white"
+            color=FONT
         ),
 
         margin=dict(
@@ -1272,19 +1324,19 @@ with tab5:
 
         ],
 
-        template="plotly_dark",
+        template=PLOT_TEMPLATE,
 
         height=900
     )
 
     fig.update_layout(
 
-        paper_bgcolor="#020617",
-        plot_bgcolor="#020617",
+        paper_bgcolor=BG,
+        plot_bgcolor=BG,
 
         font=dict(
             size=20,
-            color="white"
+            color=FONT
         ),
 
         uniformtext=dict(
@@ -1302,14 +1354,14 @@ with tab5:
 # FOOTER
 # =========================================================
 
-st.markdown("""
+#st.markdown("""
 
-<br><br>
+#<br><br>
 
-<center>
+#<center>
 
-AI-powered pathway intelligence engine for ubiquitin systems biology
+#AI-powered pathway intelligence engine for ubiquitin systems biology
 
-</center>
+#</center>
 
-""", unsafe_allow_html=True)
+#""", unsafe_allow_html=True)
