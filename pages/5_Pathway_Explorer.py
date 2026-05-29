@@ -296,10 +296,41 @@ if not enrich_df.empty:
 
     })
 
-    enrich_df["EnrichmentScore"] = -np.log10(
-        enrich_df["AdjustedP"] + 1e-10
+   # =========================================================
+# SAFE NUMERIC CONVERSION
+# =========================================================
+
+enrich_df["AdjustedP"] = pd.to_numeric(
+
+    enrich_df["AdjustedP"],
+
+    errors="coerce"
+)
+
+# Remove invalid rows
+
+enrich_df = enrich_df.dropna(
+    subset=["AdjustedP"]
+)
+
+# Avoid log10(0)
+
+enrich_df["AdjustedP"] = enrich_df[
+    "AdjustedP"
+].replace(0, 1e-10)
+
+# Compute enrichment score
+
+enrich_df["EnrichmentScore"] = -np.log10(
+    enrich_df["AdjustedP"]
+)
+if enrich_df.empty:
+
+    st.warning(
+        f"No significant enrichment found for {gene}."
     )
 
+    st.stop()
     enrich_df["GeneCount"] = (
         enrich_df["Overlap"]
         .str.split("/")
