@@ -251,6 +251,8 @@ enrich_genes = interactors
 # =========================================================
 # ENRICHMENT
 # =========================================================
+# ENRICHMENT
+# =========================================================
 
 with st.spinner("Running pathway enrichment..."):
 
@@ -275,30 +277,37 @@ with st.spinner("Running pathway enrichment..."):
             outdir=None
         )
 
-        enrich_df = enr.results
+        enrich_df = enr.results.copy()
 
     except Exception as e:
 
         st.error(f"Enrichment failed: {e}")
 
-        enrich_df = pd.DataFrame()
+        st.stop()
+
+# =========================================================
+# VALIDATE RESULTS
+# =========================================================
+
+if enrich_df is None or enrich_df.empty:
+
+    st.warning(
+        f"No enrichment results found for {gene}."
+    )
+
+    st.stop()
 
 # =========================================================
 # CLEAN RESULTS
 # =========================================================
 
-if not enrich_df.empty:
+enrich_df = enrich_df.rename(columns={
 
-    enrich_df = enrich_df.rename(columns={
+    "Term": "Pathway",
+    "Adjusted P-value": "AdjustedP"
+})
 
-        "Term": "Pathway",
-        "Adjusted P-value": "AdjustedP"
-
-    })
-
-   # =========================================================
-# SAFE NUMERIC CONVERSION
-# =========================================================
+# Convert safely to numeric
 
 enrich_df["AdjustedP"] = pd.to_numeric(
 
@@ -307,11 +316,21 @@ enrich_df["AdjustedP"] = pd.to_numeric(
     errors="coerce"
 )
 
-# Remove invalid rows
+# Remove only invalid values
 
 enrich_df = enrich_df.dropna(
     subset=["AdjustedP"]
 )
+
+# Safety fallback
+
+if enrich_df.empty:
+
+    st.warning(
+        f"No valid enrichment statistics found for {gene}."
+    )
+
+    st.stop()
 
 # Avoid log10(0)
 
@@ -324,40 +343,44 @@ enrich_df["AdjustedP"] = enrich_df[
 enrich_df["EnrichmentScore"] = -np.log10(
     enrich_df["AdjustedP"]
 )
+
+# Gene counts
+
+enrich_df["GeneCount"] = (
+
+    enrich_df["Overlap"]
+
+    .astype(str)
+
+    .str.split("/")
+
+    .str[0]
+
+    .astype(int)
+)
+
+# Sort
+
+enrich_df = enrich_df.sort_values(
+
+    "EnrichmentScore",
+
+    ascending=False
+)
+
+# Keep top pathways
+
+enrich_df = enrich_df.head(20)
+
+# Final safety
+
 if enrich_df.empty:
 
     st.warning(
-        f"No significant enrichment found for {gene}."
+        f"No enriched pathways detected for {gene}."
     )
 
     st.stop()
-    enrich_df["GeneCount"] = (
-        enrich_df["Overlap"]
-        .str.split("/")
-        .str[0]
-        .astype(int)
-    )
-
-    enrich_df = enrich_df.sort_values(
-        "EnrichmentScore",
-        ascending=False
-    ).head(20)
-
-else:
-
-    enrich_df = pd.DataFrame({
-
-        "Pathway": ["No enrichment"],
-
-        "EnrichmentScore": [1],
-
-        "AdjustedP": [1],
-
-        "GeneCount": [1],
-
-        "Gene_set": ["Unknown"]
-    })
-
 # =========================================================
 # METRICS
 # =========================================================
