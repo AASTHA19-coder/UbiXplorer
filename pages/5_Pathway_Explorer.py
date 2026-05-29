@@ -154,6 +154,62 @@ if export_theme == "Publication White":
         """,
         unsafe_allow_html=True
     )
+    # =========================================================
+# THEME COLORS
+# =========================================================
+
+if export_theme == "Publication White":
+
+    PLOT_TEMPLATE = "plotly_white"
+
+    BG = "white"
+
+    FONT = "black"
+
+    EDGE = "#d1d5db"
+
+else:
+
+    PLOT_TEMPLATE = "plotly_dark"
+
+    BG = "#020617"
+
+    FONT = "white"
+
+    EDGE = "#334155"
+
+# =========================================================
+# WHITE MODE CSS
+# =========================================================
+
+if export_theme == "Publication White":
+
+    st.markdown(
+        """
+        <style>
+
+        .stApp{
+            background:white !important;
+        }
+
+        .stRadio label,
+        .stSelectbox label,
+        .stMarkdown,
+        .stText,
+        .stCaption,
+        .stMetric,
+        .stTabs,
+        p,
+        div,
+        span {
+
+            color:black !important;
+        }
+
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 # =========================================================
 # GENE INPUT
@@ -605,7 +661,7 @@ with tab2:
 
         points="all",
 
-        template="plotly_dark",
+        template=PLOT_TEMPLATE,
 
         color_discrete_sequence=["#8b5cf6"],
 
@@ -614,8 +670,8 @@ with tab2:
 
     fig2.update_layout(
 
-        paper_bgcolor="#020617",
-        plot_bgcolor="#020617",
+        paper_bgcolor=BG,
+        plot_bgcolor=BG,
 
         font=dict(
             size=15,
