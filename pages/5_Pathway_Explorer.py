@@ -1,6 +1,5 @@
 # =========================================================
-# PATHWAY EXPLORER — FINAL CINEMATIC VERSION
-# REAL BIOLOGY + BEAUTIFUL VISUALIZATION
+# PATHWAY EXPLORER — FINAL STABLE VERSION
 # =========================================================
 
 import streamlit as st
@@ -23,51 +22,15 @@ st.set_page_config(
 )
 
 # =========================================================
-# CUSTOM CSS
-# =========================================================
-
-st.markdown("""
-<style>
-
-.stApp{
-    background: linear-gradient(180deg,#020617 0%, #071426 100%);
-    color:white;
-}
-
-.block-container{
-    padding-top:2rem;
-    padding-bottom:2rem;
-    max-width:1450px;
-}
-
-.title{
-    font-size:52px;
-    font-weight:800;
-    color:#22d3ee;
-    letter-spacing:0.5px;
-}
-
-.sub{
-    font-size:18px;
-    color:#cbd5e1;
-    margin-bottom:25px;
-}
-
-.metric-container{
-    background:#0f172a;
-    padding:18px;
-    border-radius:16px;
-}
-
-</style>
-""", unsafe_allow_html=True)
-
-# =========================================================
 # HEADER
 # =========================================================
 
 st.markdown(
-    "<div class='title'>Pathway Explorer</div>",
+    """
+    <div class='title'>
+    Pathway Explorer
+    </div>
+    """,
     unsafe_allow_html=True
 )
 
@@ -79,21 +42,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-# =========================================================
-# LOAD REFERENCE
-# =========================================================
-@st.cache_resource
-def load_reference():
-
-    human = ad.read_h5ad(
-        "assets/human/reference/human_adata.h5ad"
-    )
-
-    human.var_names_make_unique()
-
-    return human
-adata_h = load_reference()
 
 # =========================================================
 # SOURCE
@@ -110,6 +58,7 @@ source = st.radio(
 
     horizontal=True
 )
+
 # =========================================================
 # EXPORT THEME
 # =========================================================
@@ -118,44 +67,16 @@ export_theme = st.radio(
 
     "Export Theme",
 
-    ["Dark", "Publication White"],
+    [
+        "Dark",
+        "Publication White"
+    ],
 
     horizontal=True
 )
 
 # =========================================================
-# THEME COLORS
-# =========================================================
-if export_theme == "Publication White":
-
-    st.markdown(
-        """
-        <style>
-
-        .stApp{
-            background:white !important;
-        }
-
-        .stRadio label,
-        .stSelectbox label,
-        .stMarkdown,
-        .stText,
-        .stCaption,
-        .stMetric,
-        .stTabs,
-        p,
-        div,
-        span {
-
-            color:black !important;
-        }
-
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-    # =========================================================
-# THEME COLORS
+# THEME ENGINE
 # =========================================================
 
 if export_theme == "Publication White":
@@ -164,9 +85,15 @@ if export_theme == "Publication White":
 
     BG = "white"
 
-    FONT = "black"
+    FONT = "#0f172a"
 
-    EDGE = "#d1d5db"
+    SUBFONT = "#475569"
+
+    TITLE = "#0f172a"
+
+    EDGE_COLOR = "rgba(100,116,139,0.40)"
+
+    EMPTY_DOT = "#cbd5e1"
 
 else:
 
@@ -176,70 +103,79 @@ else:
 
     FONT = "white"
 
-    EDGE = "#334155"
+    SUBFONT = "#cbd5e1"
+
+    TITLE = "#22d3ee"
+
+    EDGE_COLOR = "rgba(148,163,184,0.25)"
+
+    EMPTY_DOT = "#334155"
 
 # =========================================================
-# WHITE MODE CSS
+# CSS
 # =========================================================
 
-if export_theme == "Publication White":
+st.markdown(
+    f"""
+    <style>
 
-    st.markdown(
-        """
-        <style>
+    .stApp {{
+        background:{BG};
+        color:{FONT};
+    }}
 
-        .stApp{
-            background:white !important;
-        }
+    .block-container {{
+        padding-top:2rem;
+        padding-bottom:2rem;
+        max-width:1450px;
+    }}
 
-        .stRadio label,
-        .stSelectbox label,
-        .stMarkdown,
-        .stText,
-        .stCaption,
-        .stMetric,
-        .stTabs,
-        p,
-        div,
-        span {
+    .title {{
+        font-size:52px;
+        font-weight:800;
+        color:{TITLE};
+        letter-spacing:0.5px;
+    }}
 
-            color:black !important;
-        }
+    .sub {{
+        font-size:18px;
+        color:{SUBFONT};
+        margin-bottom:25px;
+    }}
 
-        </style>
-        """,
-        unsafe_allow_html=True
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# =========================================================
+# LOAD REFERENCE
+# =========================================================
+
+@st.cache_resource
+def load_reference():
+
+    human = ad.read_h5ad(
+        "assets/human/reference/human_adata.h5ad"
     )
+
+    human.var_names_make_unique()
+
+    return human
+
+adata_h = load_reference()
 
 # =========================================================
 # GENE INPUT
 # =========================================================
 
-if (
-    source == "Uploaded Genes"
-    and
-    "gene_list" in st.session_state
-    and
-    len(st.session_state["gene_list"]) > 0
-):
-
-    genes = sorted(
-        list(set(st.session_state["gene_list"]))
-    )
-
-else:
-
-    genes = sorted(
-        list(adata_h.var_names)
-    )
-
-# =========================================================
-# SELECT GENE
-# =========================================================
-
 gene = st.selectbox(
+
     "Select Gene",
-    genes
+
+    sorted(list(adata_h.var_names)),
+
+    index=0
 )
 
 gene = gene.upper()
@@ -248,48 +184,34 @@ gene = gene.upper()
 # STRING API
 # =========================================================
 
-@st.cache_data(show_spinner=False)
+@st.cache_data
 def get_string_interactions(query_gene):
 
     try:
 
-        string_api_url = "https://string-db.org/api"
-        output_format = "json"
-        method = "network"
-
-        request_url = "/".join([
-            string_api_url,
-            output_format,
-            method
-        ])
-
-        params = {
-
-            "identifiers": query_gene,
-            "species": 9606,
-            "required_score": 700,
-            "limit": 20
-        }
-
-        response = requests.get(
-            request_url,
-            params=params
+        url = (
+            "https://string-db.org/api/json/network"
+            f"?identifiers={query_gene}"
+            "&species=9606"
         )
 
-        data = response.json()
+        r = requests.get(url)
 
-        interactors = set()
+        data = r.json()
+
+        interactors = set([query_gene])
+
         edges = []
 
-        for item in data:
+        for row in data[:50]:
 
-            p1 = item["preferredName_A"]
-            p2 = item["preferredName_B"]
+            a = row["preferredName_A"]
+            b = row["preferredName_B"]
 
-            interactors.add(p1)
-            interactors.add(p2)
+            interactors.add(a)
+            interactors.add(b)
 
-            edges.append((p1, p2))
+            edges.append((a, b))
 
         return list(interactors), edges
 
@@ -297,13 +219,9 @@ def get_string_interactions(query_gene):
 
         return [query_gene], []
 
-
 # =========================================================
-# GET ENRICHMENT GENES
+# GET GENES
 # =========================================================
-
-# ALWAYS get STRING interactors
-# around currently selected gene
 
 interactors, string_edges = get_string_interactions(
     gene
@@ -314,40 +232,7 @@ interactors = [
     for g in interactors
 ]
 
-# ---------------------------------------------------------
-# REFERENCE MODE
-# ---------------------------------------------------------
-
-if source == "Reference Atlas":
-
-    enrich_genes = interactors
-
-# ---------------------------------------------------------
-# UPLOADED MODE
-# ---------------------------------------------------------
-
-else:
-
-    uploaded_genes = set([
-        g.upper()
-        for g in genes
-    ])
-
-    # KEEP ONLY uploaded genes
-    # connected to selected gene
-
-    enrich_genes = list(
-
-        uploaded_genes.intersection(
-            set(interactors)
-        )
-    )
-
-    # IMPORTANT FALLBACK
-
-    if len(enrich_genes) < 3:
-
-        enrich_genes = interactors[:15]
+enrich_genes = interactors
 
 # =========================================================
 # ENRICHMENT
@@ -369,7 +254,6 @@ with st.spinner("Running pathway enrichment..."):
                 "KEGG_2021_Human",
                 "Reactome_2022",
                 "Panther_2016"
-
             ],
 
             organism="human",
@@ -467,13 +351,13 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "UPS Interaction Landscape: STRING Analysis",
     "Pathway Enrichment",
     "Gene to Pathway Mapping",
-    "Functional Overlap Arhchitecture",
+    "Functional Overlap Architecture",
     "Ontology"
 
 ])
 
 # =========================================================
-# TAB 1 — STRING NETWORK
+# TAB 1 — STRING
 # =========================================================
 
 with tab1:
@@ -482,17 +366,9 @@ with tab1:
 
     G = nx.Graph()
 
-    if len(string_edges) > 0:
+    for edge in string_edges:
 
-        for edge in string_edges:
-
-            G.add_edge(edge[0], edge[1])
-
-    else:
-
-        for pathway in enrich_df["Pathway"][:10]:
-
-            G.add_edge(gene, pathway)
+        G.add_edge(edge[0], edge[1])
 
     pos = nx.spring_layout(
         G,
@@ -519,7 +395,7 @@ with tab1:
 
         line=dict(
             width=1,
-            color="rgba(148,163,184,0.20)"
+            color=EDGE_COLOR
         ),
 
         hoverinfo='none'
@@ -548,20 +424,18 @@ with tab1:
 
         marker=dict(
 
-            size=30,
+            size=28,
 
             color="#22d3ee",
 
             line=dict(
                 width=2,
                 color="#8b5cf6"
-            ),
-
-            opacity=0.92
+            )
         ),
 
         textfont=dict(
-            size=13,
+            size=12,
             color=FONT
         )
     )
@@ -574,17 +448,31 @@ with tab1:
 
         template=PLOT_TEMPLATE,
 
-        height=780,
+        height=760,
 
         paper_bgcolor=BG,
         plot_bgcolor=BG,
 
-        showlegend=False
+        font=dict(
+            color=FONT
+        ),
+
+        showlegend=False,
+
+        xaxis=dict(showgrid=False, zeroline=False),
+        yaxis=dict(showgrid=False, zeroline=False)
     )
 
     st.plotly_chart(
         fig,
-        use_container_width=True
+        use_container_width=True,
+        config={
+            "displaylogo": False,
+            "toImageButtonOptions": {
+                "format": "png",
+                "scale": 4
+            }
+        }
     )
 
 # =========================================================
@@ -608,18 +496,11 @@ with tab2:
 
         hover_name="Pathway",
 
-        color_continuous_scale=[
-
-            [0.0, "#1e293b"],
-            [0.3, "#22d3ee"],
-            [0.6, "#8b5cf6"],
-            [1.0, "#ec4899"]
-
-        ],
+        color_continuous_scale="Turbo",
 
         template=PLOT_TEMPLATE,
 
-        height=780
+        height=760
     )
 
     fig.update_layout(
@@ -628,9 +509,11 @@ with tab2:
         plot_bgcolor=BG,
 
         font=dict(
-            size=15,
             color=FONT
-        )
+        ),
+
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=False)
     )
 
     st.plotly_chart(
@@ -638,411 +521,95 @@ with tab2:
         use_container_width=True
     )
 
-    # =====================================================
-    # VIOLIN PLOT
-    # =====================================================
-
-    st.subheader("Distribution of Enrichment Scores")
-
-    violin_df = enrich_df.copy()
-
-    if "Gene_set" not in violin_df.columns:
-
-        violin_df["Gene_set"] = "Unknown"
-
-    fig2 = px.violin(
-
-        violin_df,
-
-        x="Gene_set",
-        y="EnrichmentScore",
-
-        box=True,
-
-        points="all",
-
-        template=PLOT_TEMPLATE,
-
-        color_discrete_sequence=["#8b5cf6"],
-
-        height=720
-    )
-
-    fig2.update_layout(
-
-        paper_bgcolor=BG,
-        plot_bgcolor=BG,
-
-        font=dict(
-            size=15,
-            color=FONT
-        )
-    )
-
-    st.plotly_chart(
-        fig2,
-        use_container_width=True
-    )
-
 # =========================================================
-# TAB 3 — SANKEY/ GENE TO PATHWAY MAPPING
+# TAB 3 — SANKEY
 # =========================================================
 
 with tab3:
 
-    st.subheader("Gene → Process Systems Architecture")
+    st.subheader("Gene → Pathway Mapping")
 
-    # -----------------------------------------------------
-    # TOP ENRICHED TERMS
-    # -----------------------------------------------------
+    top_df = enrich_df.head(8)
 
-    top_df = enrich_df.head(8).copy()
+    labels = (
 
-    # -----------------------------------------------------
-    # CLEAN PATHWAY LABELS
-    # -----------------------------------------------------
+        [gene]
 
-    top_df["CleanTerm"] = (
+        +
 
-        top_df["Pathway"]
-        .astype(str)
-        .str.replace(r"\s*\(GO:\d+\)", "", regex=True)
-        .str.replace(r"\s*R-HSA-\d+", "", regex=True)
-        .str.slice(0, 55)
-
+        top_df["Pathway"].tolist()
     )
-
-    # -----------------------------------------------------
-    # DETECT TRUE DISEASE TERMS
-    # ONLY FROM ENRICHR OUTPUT
-    # -----------------------------------------------------
-
-    disease_df = top_df[
-
-        top_df["CleanTerm"].str.contains(
-
-            "disease|cancer|carcinoma|leukemia|"
-            "infection|diabetes|alzheimer|"
-            "parkinson|arthritis",
-
-            case=False,
-            na=False
-
-        )
-
-    ]
-
-    process_df = top_df[
-
-        ~top_df.index.isin(disease_df.index)
-
-    ]
-
-    # -----------------------------------------------------
-    # NODE LABELS
-    # -----------------------------------------------------
-
-    selected_gene = gene.upper()
-
-    labels = [selected_gene]
-
-    process_labels = (
-        process_df["CleanTerm"]
-        .unique()
-        .tolist()
-    )
-
-    disease_labels = (
-        disease_df["CleanTerm"]
-        .unique()
-        .tolist()
-    )
-
-    labels.extend(process_labels)
-
-    # ONLY ADD DISEASE LAYER
-    # IF REAL DISEASE TERMS EXIST
-
-    if len(disease_labels) > 0:
-
-        labels.extend(disease_labels)
-
-    # -----------------------------------------------------
-    # NODE MAP
-    # -----------------------------------------------------
-
-    node_map = {
-
-        label: idx
-        for idx, label in enumerate(labels)
-
-    }
-
-    # -----------------------------------------------------
-    # LINKS
-    # -----------------------------------------------------
 
     source_nodes = []
     target_nodes = []
     values = []
-    link_colors = []
 
-    # -----------------------------------------------------
-    # GENE → PROCESS
-    # -----------------------------------------------------
+    for i in range(len(top_df)):
 
-    for _, row in process_df.iterrows():
+        source_nodes.append(0)
 
-        process_name = row["CleanTerm"]
-
-        source_nodes.append(
-            node_map[selected_gene]
-        )
-
-        target_nodes.append(
-            node_map[process_name]
-        )
+        target_nodes.append(i + 1)
 
         values.append(
-
-            max(
-                int(row["GeneCount"]),
-                1
-            )
-
+            int(top_df.iloc[i]["GeneCount"])
         )
 
-        link_colors.append(
-            "rgba(34,211,238,0.25)"
+    fig = go.Figure(data=[go.Sankey(
+
+        arrangement="snap",
+
+        node=dict(
+
+            pad=20,
+
+            thickness=22,
+
+            label=labels,
+
+            color="#8b5cf6"
+        ),
+
+        link=dict(
+
+            source=source_nodes,
+
+            target=target_nodes,
+
+            value=values,
+
+            color="rgba(139,92,246,0.25)"
         )
 
-    # -----------------------------------------------------
-    # PROCESS → DISEASE
-    # ONLY IF REAL DISEASE TERMS EXIST
-    # -----------------------------------------------------
-
-    if len(disease_labels) > 0:
-
-        process_cycle = process_labels.copy()
-
-        for i, (_, row) in enumerate(
-            disease_df.iterrows()
-        ):
-
-            disease_name = row["CleanTerm"]
-
-            process_name = process_cycle[
-                i % len(process_cycle)
-            ]
-
-            source_nodes.append(
-                node_map[process_name]
-            )
-
-            target_nodes.append(
-                node_map[disease_name]
-            )
-
-            values.append(
-
-                max(
-                    int(row["GeneCount"]),
-                    1
-                )
-
-            )
-
-            link_colors.append(
-                "rgba(236,72,153,0.22)"
-            )
-
-    # -----------------------------------------------------
-    # NODE COLORS
-    # -----------------------------------------------------
-
-    node_colors = []
-
-    for label in labels:
-
-        if label == selected_gene:
-
-            node_colors.append("#22d3ee")
-
-        elif label in disease_labels:
-
-            node_colors.append("#ec4899")
-
-        else:
-
-            node_colors.append("#8b5cf6")
-
-    # -----------------------------------------------------
-    # SANKEY FIGURE
-    # -----------------------------------------------------
-
-    fig = go.Figure(data=[
-
-        go.Sankey(
-
-            arrangement="snap",
-
-            node=dict(
-
-                pad=28,
-
-                thickness=28,
-
-                line=dict(
-                    color="#020617",
-                    width=2
-                ),
-
-                label=labels,
-
-                color=node_colors,
-
-                hovertemplate=
-                "%{label}<extra></extra>"
-
-            ),
-
-            link=dict(
-
-                source=source_nodes,
-
-                target=target_nodes,
-
-                value=values,
-
-                color=link_colors,
-
-                hovertemplate=
-                "Connection Strength: %{value}<extra></extra>"
-
-            )
-
-        )
-
-    ])
-
-    # -----------------------------------------------------
-    # LAYOUT
-    # -----------------------------------------------------
+    )])
 
     fig.update_layout(
 
         template=PLOT_TEMPLATE,
 
+        height=780,
+
         paper_bgcolor=BG,
         plot_bgcolor=BG,
 
         font=dict(
-
-            size=16,
             color=FONT
-
-        ),
-
-        height=850,
-
-        margin=dict(
-
-            l=20,
-            r=20,
-            t=60,
-            b=20
-
         )
-
     )
 
     st.plotly_chart(
-
         fig,
         use_container_width=True
-
     )
 
 # =========================================================
-
-# =========================================================
-# TAB 4 — FUNCTIONAL OVERLAP ARCHITECTURE
-
-
-with tab4:
-
-    st.subheader("Functional Mapping")
-
-    # -----------------------------------------------------
-    # TOP PATHWAYS
-    # -----------------------------------------------------
-
-    heat_df = enrich_df.head(10).copy()
-
-    # -----------------------------------------------------
-    # GENES TO SHOW
-    # -----------------------------------------------------
-
-    heat_genes = enrich_genes[:10]
-
-    # -----------------------------------------------------
-    # BUILD REAL MATRIX
-    # -----------------------------------------------------
-
-    matrix = []
-
-    for pathway_genes in heat_df["Genes"]:
-
-        pathway_gene_list = [
-
-            g.strip().upper()
-
-            for g in str(pathway_genes).split(";")
-        ]
-
-        row = []
-
-        for g in heat_genes:
-
-            if g.upper() in pathway_gene_list:
-
-                row.append(1)
-
-            else:
-
-                row.append(0)
-
-        matrix.append(row)
-
-    heat_matrix = np.array(matrix)
-
-    # -----------------------------------------------------
-    # HEATMAP
-    # -----------------------------------------------------
-# =========================================================
-# TAB 4 — FUNCTIONAL CONNECTIVITY MAP
-# =========================================================
-# =========================================================
-# TAB 4 — FUNCTIONAL OVERLAP ARCHITECTURE
+# TAB 4 — OVERLAP
 # =========================================================
 
 with tab4:
 
     st.subheader("Functional Overlap Architecture")
 
-    st.caption(
-        "Shared gene architecture across enriched biological pathways."
-    )
-
-    # -----------------------------------------------------
-    # TOP PATHWAYS
-    # -----------------------------------------------------
-
     upset_df = enrich_df.head(8).copy()
-
-    # -----------------------------------------------------
-    # BUILD GENE ↔ PATHWAY MATRIX
-    # -----------------------------------------------------
 
     pathway_dict = {}
 
@@ -1066,10 +633,6 @@ with tab4:
 
         pathway_dict[pathway] = filtered
 
-    # -----------------------------------------------------
-    # UNIQUE GENES
-    # -----------------------------------------------------
-
     all_genes = sorted(
 
         list(set(
@@ -1081,10 +644,6 @@ with tab4:
             for g in geneset
         ))
     )
-
-    # -----------------------------------------------------
-    # MATRIX
-    # -----------------------------------------------------
 
     matrix = []
 
@@ -1113,134 +672,15 @@ with tab4:
         columns=list(pathway_dict.keys())
     )
 
-    # -----------------------------------------------------
-    # INTERSECTION COUNTS
-    # -----------------------------------------------------
-
-    intersection_counts = matrix_df.sum(axis=0)
-
-    # -----------------------------------------------------
-    # BARPLOT
-    # -----------------------------------------------------
-
-    fig = go.Figure()
-
-    fig.add_trace(
-
-        go.Bar(
-
-            x=intersection_counts.index,
-
-            y=intersection_counts.values,
-
-            marker=dict(
-
-                color=[
-
-                    "#38bdf8",
-                    "#22d3ee",
-                    "#06b6d4",
-                    "#8b5cf6",
-                    "#a855f7",
-                    "#c084fc",
-                    "#ec4899",
-                    "#f472b6"
-
-                ],
-
-                line=dict(
-                    color="#e2e8f0",
-                    width=1
-                )
-            ),
-
-            hovertemplate=
-            "<b>%{x}</b><br>Shared Genes: %{y}<extra></extra>"
-        )
-    )
-
-    # -----------------------------------------------------
-    # LAYOUT
-    # -----------------------------------------------------
-
-    fig.update_layout(
-
-        template=PLOT_TEMPLATE,
-
-        height=720,
-
-        paper_bgcolor=BG,
-        plot_bgcolor=BG,
-
-        title=dict(
-
-            text="Pathway Intersection Landscape",
-
-            font=dict(
-                size=24,
-                color=FONT
-            )
-        ),
-
-        xaxis=dict(
-
-            tickangle=-20,
-
-            title="Enriched Pathways",
-
-            title_font=dict(
-                size=16
-            ),
-
-            tickfont=dict(
-                size=12
-            )
-        ),
-
-        yaxis=dict(
-
-            title="Number of Shared Genes",
-
-            title_font=dict(
-                size=16
-            ),
-
-            tickfont=dict(
-                size=12
-            )
-        ),
-
-        font=dict(
-            color=FONT
-        ),
-
-        margin=dict(
-            l=40,
-            r=40,
-            t=80,
-            b=140
-        )
-    )
-
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
-
-    # =====================================================
-    # BINARY OVERLAP DOT MATRIX
-    # =====================================================
-
-    st.subheader("Gene–Pathway Membership Matrix")
-
     dot_x = []
     dot_y = []
+
     dot_color = []
     dot_size = []
 
-    for i, gene_name in enumerate(matrix_df.index):
+    for gene_name in matrix_df.index:
 
-        for j, pathway in enumerate(matrix_df.columns):
+        for pathway in matrix_df.columns:
 
             val = matrix_df.loc[gene_name, pathway]
 
@@ -1254,7 +694,7 @@ with tab4:
 
             else:
 
-                dot_color.append("#334155")
+                dot_color.append(EMPTY_DOT)
                 dot_size.append(8)
 
     dot_fig = go.Figure()
@@ -1272,16 +712,8 @@ with tab4:
 
                 size=dot_size,
 
-                color=dot_color,
-
-                line=dict(
-                    color="#94a3b8",
-                    width=0.5
-                )
-            ),
-
-            hovertemplate=
-            "Gene: %{y}<br>Pathway: %{x}<extra></extra>"
+                color=dot_color
+            )
         )
     )
 
@@ -1289,48 +721,13 @@ with tab4:
 
         template=PLOT_TEMPLATE,
 
-        height=720,
+        height=760,
 
         paper_bgcolor=BG,
         plot_bgcolor=BG,
 
-        xaxis=dict(
-
-            tickangle=-25,
-
-            title="Pathways",
-
-            title_font=dict(
-                size=15
-            ),
-
-            tickfont=dict(
-                size=11
-            )
-        ),
-
-        yaxis=dict(
-
-            title="Genes",
-
-            title_font=dict(
-                size=15
-            ),
-
-            tickfont=dict(
-                size=11
-            )
-        ),
-
         font=dict(
             color=FONT
-        ),
-
-        margin=dict(
-            l=40,
-            r=40,
-            t=40,
-            b=120
         )
     )
 
@@ -1338,6 +735,7 @@ with tab4:
         dot_fig,
         use_container_width=True
     )
+
 # =========================================================
 # TAB 5 — ONTOLOGY
 # =========================================================
@@ -1363,18 +761,11 @@ with tab5:
 
         color="EnrichmentScore",
 
-        color_continuous_scale=[
-
-            [0.0, "#164e63"],
-            [0.4, "#22d3ee"],
-            [0.7, "#8b5cf6"],
-            [1.0, "#ec4899"]
-
-        ],
+        color_continuous_scale="Turbo",
 
         template=PLOT_TEMPLATE,
 
-        height=900
+        height=850
     )
 
     fig.update_layout(
@@ -1383,13 +774,8 @@ with tab5:
         plot_bgcolor=BG,
 
         font=dict(
-            size=20,
+            size=16,
             color=FONT
-        ),
-
-        uniformtext=dict(
-            minsize=16,
-            mode='hide'
         )
     )
 
